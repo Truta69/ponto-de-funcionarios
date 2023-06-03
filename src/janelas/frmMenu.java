@@ -108,6 +108,11 @@ public class frmMenu extends javax.swing.JFrame {
 
         btnFuncionario.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         btnFuncionario.setText("FUNCIONARIO");
+        btnFuncionario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFuncionarioActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -142,6 +147,11 @@ public class frmMenu extends javax.swing.JFrame {
         frmEmpresa emp = new frmEmpresa();
         emp.setVisible(true);
     }//GEN-LAST:event_btnEmpresaActionPerformed
+
+    private void btnFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFuncionarioActionPerformed
+        frmFuncionario func = new frmFuncionario();
+        func.setVisible(true);
+    }//GEN-LAST:event_btnFuncionarioActionPerformed
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
