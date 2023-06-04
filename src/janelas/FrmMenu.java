@@ -6,11 +6,11 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-public class frmMenu extends javax.swing.JFrame {
+public class FrmMenu extends javax.swing.JFrame {
     
     private final EventosDoMouse eventos = new EventosDoMouse();
     
-    public frmMenu() {
+    public FrmMenu() {
         initComponents();
         this.setExtendedState(MAXIMIZED_BOTH);
         //trocar icone JFRAME..COM IMAGEM DO PACOTE IMG
@@ -144,12 +144,12 @@ public class frmMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmpresaActionPerformed
-        frmEmpresa emp = new frmEmpresa();
+        FrmEmpresa emp = new FrmEmpresa();
         emp.setVisible(true);
     }//GEN-LAST:event_btnEmpresaActionPerformed
 
     private void btnFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFuncionarioActionPerformed
-        frmFuncionario func = new frmFuncionario();
+        FrmFuncionario func = new FrmFuncionario();
         func.setVisible(true);
     }//GEN-LAST:event_btnFuncionarioActionPerformed
     
@@ -167,20 +167,22 @@ public class frmMenu extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new frmMenu().setVisible(true);
+            new FrmMenu().setVisible(true);
         });
     }
 
