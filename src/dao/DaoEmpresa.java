@@ -21,8 +21,8 @@ public class DaoEmpresa {
 
     public static List<Empresa> todasEmpresas() {
         List<Empresa> todas = new ArrayList<>();
-        try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/usuarios", "postgres", "1234")) {
-            String sql = "select * from empresas order by id_empresa";
+        try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
+            String sql = "select * from tab_empresa order by id_empresa";
             PreparedStatement stm = c.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();//recebe resultado
             while (rs.next()) {

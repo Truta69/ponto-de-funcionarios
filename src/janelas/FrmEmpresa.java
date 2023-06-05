@@ -16,6 +16,7 @@ public class FrmEmpresa extends javax.swing.JFrame {
         initComponents();
         setSize(800, 500);
         setResizable(false);
+        carregarTabela();
         carregarBotoes();
         alterarCorBotoes();
     }
