@@ -32,8 +32,18 @@ public class ModeloTabela extends AbstractTableModel {
 
     @Override//passa parametros para monstar a tabela
     public Object getValueAt(int numLin, int numCol) {
-        Object[] linha = (Object[]) getLinhas().get(numLin);
-        return linha[numCol];
+        if (getColumnCount() < 4) {
+            Empresa e = (Empresa) linhas.get(numLin);
+            switch (numCol) {
+                case 0:
+                    return e.getCodigo();
+                case 1:
+                    return e.getNome();
+                case 2:
+                    return e.getCnpj();
+            }
+        }
+        return null;
     }
 
     //metodos  digitados

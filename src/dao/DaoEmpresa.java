@@ -37,4 +37,16 @@ public class DaoEmpresa {
         }
         return todas;
     }
+
+    public static void inserirEmpresas(Empresa emp) {
+        try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
+            String sql = "insert into tab_empresa(nome_empresa,cnpj)values(?,?) ";
+            PreparedStatement stm = c.prepareStatement(sql);
+            stm.setString(1, emp.getNome());
+            stm.setString(2, emp.getCnpj());
+            stm.executeUpdate();//para insert
+        } catch (SQLException ex) {
+            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+        }
+    }
 }
