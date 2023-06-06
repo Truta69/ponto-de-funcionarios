@@ -45,7 +45,7 @@ public class FrmEmpresa extends javax.swing.JFrame {
         String[] colunas = new String[]{"Codigo", "Nome", "CNPJ"};
         int[] larguraColunas = {50, 400, 100};
         DesenharTabela<Empresa> desenhar = new DesenharTabela<>();
-        desenhar.renderizarTabela(tblEmpresa, colunas, larguraColunas, dados);
+        desenhar.renderizarTabela(tabEmpresa, colunas, larguraColunas, dados);
     }
 
     private void carregarCampos() {
@@ -60,7 +60,7 @@ public class FrmEmpresa extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblEmpresa = new javax.swing.JTable();
+        tabEmpresa = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtCod = new javax.swing.JTextField();
@@ -79,8 +79,8 @@ public class FrmEmpresa extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(204, 255, 204));
 
-        tblEmpresa.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        tblEmpresa.setModel(new javax.swing.table.DefaultTableModel(
+        tabEmpresa.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        tabEmpresa.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -91,7 +91,12 @@ public class FrmEmpresa extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(tblEmpresa);
+        tabEmpresa.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabEmpresaMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tabEmpresa);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -179,6 +184,11 @@ public class FrmEmpresa extends javax.swing.JFrame {
 
         btnAlterar.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         btnAlterar.setText("Alterar");
+        btnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -248,6 +258,23 @@ public class FrmEmpresa extends javax.swing.JFrame {
         config.limparCampos(lista);//chama metodo da classe e passa lista de campos p limpar
     }//GEN-LAST:event_btnSalvarActionPerformed
 
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+        carregarCampos();
+        DaoEmpresa.updateEmpresa(emp);
+        carregarTabela();
+        List<JTextField> lista = jText();
+        config.limparCampos(lista);
+    }//GEN-LAST:event_btnAlterarActionPerformed
+
+    private void tabEmpresaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabEmpresaMouseClicked
+        String nomeEmpresa;
+        nomeEmpresa = String.valueOf(tabEmpresa.getValueAt(tabEmpresa.getSelectedRow(), 1));
+        emp = DaoEmpresa.getEmpresa(nomeEmpresa);
+        txtCod.setText(String.valueOf(emp.getCodigo()));
+        txtNome.setText(emp.getNome());
+        txtCnpj.setText(emp.getCnpj());
+    }//GEN-LAST:event_tabEmpresaMouseClicked
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -291,7 +318,7 @@ public class FrmEmpresa extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblEmpresa;
+    private javax.swing.JTable tabEmpresa;
     private javax.swing.JTextField txtCnpj;
     private javax.swing.JTextField txtCod;
     private javax.swing.JTextField txtNome;
