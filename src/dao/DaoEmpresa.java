@@ -50,6 +50,7 @@ public class DaoEmpresa {
         }
     }
 
+    //CARREGAR CAMPOS PELO CLICK NA LINHA TABELA pega uma empresa.. nao uma lista
     public static Empresa getEmpresa(String nomeRecebido) {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             String sql = "select  * from tab_empresa where  nome_empresa='" + nomeRecebido + "'";
@@ -73,6 +74,17 @@ public class DaoEmpresa {
             pst.setString(1, emp.getNome());
             pst.setString(2, emp.getCnpj());
             pst.setInt(3, emp.getCodigo());
+            pst.executeUpdate();
+        } catch (SQLException ex) {
+            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+        }
+    }
+
+    public static void deletarEmpresa(Empresa empresa) {
+        try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
+            String sql = "delete from tab_empresa where id_empresa=?";
+            PreparedStatement pst = c.prepareStatement(sql);
+            pst.setInt(1, empresa.getCodigo());
             pst.executeUpdate();
         } catch (SQLException ex) {
             throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);

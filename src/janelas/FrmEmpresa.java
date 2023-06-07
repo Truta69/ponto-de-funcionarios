@@ -6,6 +6,7 @@ import eventos.EventosDoMouse;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import modelo.Empresa;
 import tabelaDesign.DesenharTabela;
@@ -198,6 +199,11 @@ public class FrmEmpresa extends javax.swing.JFrame {
 
         btnExcluir.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
@@ -269,11 +275,23 @@ public class FrmEmpresa extends javax.swing.JFrame {
     private void tabEmpresaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabEmpresaMouseClicked
         String nomeEmpresa;
         nomeEmpresa = String.valueOf(tabEmpresa.getValueAt(tabEmpresa.getSelectedRow(), 1));
-        emp = DaoEmpresa.getEmpresa(nomeEmpresa);
+        emp = DaoEmpresa.getEmpresa(nomeEmpresa);//pega uma empresa do metodo getEmpresa..DAO
         txtCod.setText(String.valueOf(emp.getCodigo()));
         txtNome.setText(emp.getNome());
         txtCnpj.setText(emp.getCnpj());
     }//GEN-LAST:event_tabEmpresaMouseClicked
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        int resposta;
+        resposta = JOptionPane.showConfirmDialog(null, "Deseja realmete excluir?", "Pergunta", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (resposta == JOptionPane.YES_OPTION) {
+            carregarCampos();
+            DaoEmpresa.deletarEmpresa(emp);
+            carregarTabela();
+        }
+        List<JTextField> lista = jText();
+        config.limparCampos(lista);
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
