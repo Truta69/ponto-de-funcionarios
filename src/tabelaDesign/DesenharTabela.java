@@ -21,7 +21,6 @@ public class DesenharTabela<E> {
             tabela.setSelectionBackground(new Color(0, 0, 255));//cor linha selecionada
             tabela.setSelectionForeground(Color.WHITE);//cor fonte linha selecionada
             tabela.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            tabela.setRowHeight(50);//tamanho das linhas
             tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);//SO PODE SELECIONAR UM ELEMENTO NA TABELA
         }
     }

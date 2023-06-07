@@ -2,6 +2,7 @@ package janelas;
 
 import dao.DaoEmpresa;
 import eventos.ConfigurarCampos;
+import eventos.Erro;
 import eventos.EventosDoMouse;
 import java.util.Arrays;
 import java.util.List;
@@ -28,17 +29,17 @@ public class FrmEmpresa extends javax.swing.JFrame {
 
     private List<JButton> jButton() {
         List<JButton> botoes = Arrays.asList(btnSalvar, btnAlterar, btnExcluir, btnFechar);
-        return botoes;
+        return botoes;//RETORNA LISTA DE BOTOES
     }
 
     private void carregarBotoes() {
-        List<JButton> btn = jButton();
-        eventos.carregarBotoes(btn);
+        List<JButton> btn = jButton();//RECEBE LISTA DE BOTOES
+        eventos.carregarBotoes(btn);//METODO DA CLASSE PASSA A LISTA DE BOTOES
     }
 
     private void alterarCorBotoes() {
-        List<JButton> lista = jButton();
-        eventos.pintarBotes(lista);
+        List<JButton> lista = jButton();//RECEBE LISTA DE BOTOES
+        eventos.pintarBotes(lista);//AQUI O METODO ALTERNA A COR DOS BOTOES
     }
 
     private void carregarTabela() {
@@ -50,7 +51,7 @@ public class FrmEmpresa extends javax.swing.JFrame {
     }
 
     private void carregarCampos() {
-        emp.setNome(txtNome.getText());
+        emp.setNome(txtNome.getText());//AQUI SETA OS DADOS COM O CONTEUDO DOS CAMPOS
         emp.setCnpj(txtCnpj.getText());
     }
 
@@ -248,7 +249,7 @@ public class FrmEmpresa extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     //campos texto
-    private List<JTextField> jText() {
+    private List<JTextField> jText() {//lista de campos usado p limpar
         List<JTextField> listaDeCampos = Arrays.asList(txtCod, txtNome, txtCnpj);
         return listaDeCampos;
     }
@@ -257,11 +258,15 @@ public class FrmEmpresa extends javax.swing.JFrame {
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        carregarCampos();
-        DaoEmpresa.inserirEmpresas(emp);
-        carregarTabela();//depois de inserir carrega tabela
-        List<JTextField> lista = jText();//lista recebe retorno do metodo com os campos 
-        config.limparCampos(lista);//chama metodo da classe e passa lista de campos p limpar
+        if (txtNome.getText().isEmpty() || txtCnpj.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha os campos!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            carregarCampos();//CHAMA METODO COM CAMPOS P SALVAR
+            DaoEmpresa.inserirEmpresas(emp);
+            carregarTabela();//depois de inserir carrega tabela
+            List<JTextField> listaParaLimpar = jText();//lista recebe retorno do metodo com os campos 
+            config.limparCampos(listaParaLimpar);//chama metodo da classe e passa lista de campos p limpar
+        }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
