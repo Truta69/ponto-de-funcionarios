@@ -17,6 +17,6 @@ public class RenderBotoes {
     }
 
     public void alterarCorDosBotoesComMouse() {
-        eventos.pintarBotes(btn);
+        eventos.pintarBotoes(btn);
     }
 }

@@ -1,32 +1,28 @@
 package modelo;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+@Data
 public class Funcionario {
 
+    @Getter
+    @Setter
     private int codigo;
+    @Getter
+    @Setter
     private String nome;
+    @Getter
+    @Setter
     private String funcao;
-
-    public int getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getFuncao() {
-        return funcao;
-    }
-
-    public void setFuncao(String funcao) {
-        this.funcao = funcao;
-    }
+    @Getter
+    @Setter
+    private int cod_empresa;
+    @Getter
+    @Setter
+    private String nomeEmpresa;//para pegar nome empresa pelo id_empresa
+    @Getter
+    @Setter
+    private String cnpj;//usar p  tela de ponto..
 }

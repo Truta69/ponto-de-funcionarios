@@ -32,7 +32,7 @@ public class ModeloTabela extends AbstractTableModel {
 
     @Override//passa parametros para monstar a tabela
     public Object getValueAt(int numLin, int numCol) {
-        if (getColumnCount() < 4) {
+        if (getColumnCount() <4) {
             Empresa e = (Empresa) linhas.get(numLin);
             switch (numCol) {
                 case 0:
@@ -41,6 +41,19 @@ public class ModeloTabela extends AbstractTableModel {
                     return e.getNome();
                 case 2:
                     return e.getCnpj();
+            }
+        }
+        if (getColumnCount() == 4) {
+            Funcionario f = (Funcionario) linhas.get(numLin);
+            switch (numCol) {
+                case 0:
+                    return f.getCodigo();
+                case 1:
+                    return f.getNome();
+                case 2:
+                    return f.getFuncao();
+                case 3:
+                    return f.getCod_empresa();
             }
         }
         return null;

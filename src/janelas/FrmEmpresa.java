@@ -2,7 +2,6 @@ package janelas;
 
 import dao.DaoEmpresa;
 import eventos.ConfigurarCampos;
-import eventos.Erro;
 import eventos.EventosDoMouse;
 import java.util.Arrays;
 import java.util.List;
@@ -14,8 +13,8 @@ import tabelaDesign.DesenharTabela;
 
 public class FrmEmpresa extends javax.swing.JFrame {
 
-    private final ConfigurarCampos config = new ConfigurarCampos();
     private final EventosDoMouse eventos = new EventosDoMouse();
+    private final ConfigurarCampos config = new ConfigurarCampos();//inicializa a variavel..
     Empresa emp = new Empresa();
 
     public FrmEmpresa() {
@@ -34,20 +33,20 @@ public class FrmEmpresa extends javax.swing.JFrame {
 
     private void carregarBotoes() {
         List<JButton> btn = jButton();//RECEBE LISTA DE BOTOES
-        eventos.carregarBotoes(btn);//METODO DA CLASSE PASSA A LISTA DE BOTOES
+        eventos.carregarBotoes(btn);//METODO DA CLASSE PAra dar cor aos botoes ao carregar a tela
     }
 
     private void alterarCorBotoes() {
         List<JButton> lista = jButton();//RECEBE LISTA DE BOTOES
-        eventos.pintarBotes(lista);//AQUI O METODO ALTERNA A COR DOS BOTOES
+        eventos.pintarBotoes(lista);//AQUI O METODO ALTERNA A COR DOS BOTOES
     }
 
-    private void carregarTabela() {
-        List<Empresa> dados = DaoEmpresa.todasEmpresas();
+    private void carregarTabela() {//ao carregar a tela
+        List<Empresa> dados = DaoEmpresa.todasEmpresas();//classe dao pega um lista e retorna aqui p 'dados'
         String[] colunas = new String[]{"Codigo", "Nome", "CNPJ"};
         int[] larguraColunas = {50, 400, 100};
-        DesenharTabela<Empresa> desenhar = new DesenharTabela<>();
-        desenhar.renderizarTabela(tabEmpresa, colunas, larguraColunas, dados);
+        DesenharTabela<Empresa> desenhar = new DesenharTabela<>();//manda p classe desenharTabela, tipo generico de empresa
+        desenhar.renderizarTabela(tabEmpresa, colunas, larguraColunas, dados);//e desenha a tabela c dados da empresa
     }
 
     private void carregarCampos() {
@@ -163,7 +162,7 @@ public class FrmEmpresa extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(39, 39, 39)
                         .addComponent(jLabel1)))
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         jPanel4.setBackground(new java.awt.Color(204, 255, 255));
@@ -257,6 +256,7 @@ public class FrmEmpresa extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnFecharActionPerformed
 
+    //talvez usar classe de excecao p ver erro de entrada de dados...new classeException...
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         if (txtNome.getText().isEmpty() || txtCnpj.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Preencha os campos!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
@@ -279,7 +279,7 @@ public class FrmEmpresa extends javax.swing.JFrame {
 
     private void tabEmpresaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabEmpresaMouseClicked
         String nomeEmpresa;
-        nomeEmpresa = String.valueOf(tabEmpresa.getValueAt(tabEmpresa.getSelectedRow(), 1));
+        nomeEmpresa = String.valueOf(tabEmpresa.getValueAt(tabEmpresa.getSelectedRow(), 1));//linha e coluna
         emp = DaoEmpresa.getEmpresa(nomeEmpresa);//pega uma empresa do metodo getEmpresa..DAO
         txtCod.setText(String.valueOf(emp.getCodigo()));
         txtNome.setText(emp.getNome());

@@ -16,4 +16,9 @@ public class Empresa {
     @Getter
     @Setter
     String cnpj;
+
+    @Override
+    public String toString() {
+        return nome;
+    }
 }

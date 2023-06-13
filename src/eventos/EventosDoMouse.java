@@ -18,7 +18,7 @@ public class EventosDoMouse {
         });
     }
 
-    public void pintarBotes(List<JButton> btn) {
+    public void pintarBotoes(List<JButton> btn) {
         btn.forEach((jBtn) -> {
             jBtn.addMouseListener(new MouseAdapter() {
                 @Override

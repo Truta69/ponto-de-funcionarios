@@ -11,7 +11,7 @@ import modelo.Empresa;
 
 public class DaoEmpresa {
 
-    static {//chama uma vez
+    static {//chama uma vez;sera que p colocar na jenela principal(menu), pois ele executa umavez?????
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException ex) {

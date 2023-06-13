@@ -31,7 +31,7 @@ public class FrmMenu extends javax.swing.JFrame {
     
     private void alterarCorBotoes() {
         List<JButton> lista = jButton();
-        eventos.pintarBotes(lista);
+        eventos.pintarBotoes(lista);
     }
     
     @SuppressWarnings("unchecked")
@@ -48,7 +48,7 @@ public class FrmMenu extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(204, 204, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -62,7 +62,7 @@ public class FrmMenu extends javax.swing.JFrame {
             .addGap(0, 55, Short.MAX_VALUE)
         );
 
-        jPanel2.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(204, 204, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -76,7 +76,7 @@ public class FrmMenu extends javax.swing.JFrame {
             .addGap(0, 55, Short.MAX_VALUE)
         );
 
-        jPanel3.setBackground(new java.awt.Color(204, 255, 204));
+        jPanel3.setBackground(new java.awt.Color(153, 153, 255));
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
         btnEmpresa.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
