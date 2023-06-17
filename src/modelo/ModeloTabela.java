@@ -47,9 +47,9 @@ public class ModeloTabela extends AbstractTableModel {
             Funcionario f = (Funcionario) linhas.get(numLin);
             switch (numCol) {
                 case 0:
-                    return f.getCodigo();
+                    return f.getCodigoFuncionario();
                 case 1:
-                    return f.getNome();
+                    return f.getNomeFuncionario();
                 case 2:
                     return f.getFuncao();
                 case 3:

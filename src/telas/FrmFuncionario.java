@@ -1,4 +1,4 @@
-package janelas;
+package telas;
 
 import dao.DaoFuncionario;
 import eventos.ConfigurarCampos;
@@ -55,7 +55,6 @@ public class FrmFuncionario extends javax.swing.JFrame {
     }
 
     private void carregarComboBox() {
-
         List<String> nomesEmpresas = DaoFuncionario.todasEmpresas();
         cmbEmpresa.removeAllItems();
         cmbEmpresa.addItem("Empresas");
@@ -65,13 +64,13 @@ public class FrmFuncionario extends javax.swing.JFrame {
     }
 
     private void carregarCampos() {
-        func.setNome(txtNome.getText());
+        func.setNomeFuncionario(txtNome.getText());
         func.setFuncao(txtFuncao.getText());
-        func.setNomeEmpresa(cmbEmpresa.getSelectedItem().toString());
+        func.setNomeEmpresa((String) cmbEmpresa.getSelectedItem());
     }
 
     private List<JTextField> jText() {//lista de campos usado p limpar
-        List<JTextField> listaDeCampos = Arrays.asList(txtCod, txtNome);
+        List<JTextField> listaDeCampos = Arrays.asList(txtCod, txtNome, txtFuncao);
         return listaDeCampos;
     }
 
@@ -101,10 +100,12 @@ public class FrmFuncionario extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
-        jPanel2.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(153, 153, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jLabel2.setText("Cod:");
+
+        txtCod.setEnabled(false);
 
         jLabel3.setText("Nome:");
 
@@ -171,6 +172,11 @@ public class FrmFuncionario extends javax.swing.JFrame {
 
             }
         ));
+        tabFuncionario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabFuncionarioMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabFuncionario);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -184,7 +190,7 @@ public class FrmFuncionario extends javax.swing.JFrame {
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
         );
 
-        jPanel3.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel3.setBackground(new java.awt.Color(153, 153, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
@@ -206,6 +212,11 @@ public class FrmFuncionario extends javax.swing.JFrame {
 
         btnAlterar.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         btnAlterar.setText("Alterar");
+        btnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -233,6 +244,11 @@ public class FrmFuncionario extends javax.swing.JFrame {
 
         btnExcluir.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
@@ -283,6 +299,49 @@ public class FrmFuncionario extends javax.swing.JFrame {
             config.limparCampos(listaParaLimpar);//chama metodo da classe e passa lista de campos p limpar
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+        carregarCampos();
+        try {
+            DaoFuncionario.upDateFuncionario(func);
+        } catch (SQLException ex) {
+            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+        }
+        carregarTabela();
+        List<JTextField> listaParaLimpar = jText();
+        config.limparCampos(listaParaLimpar);
+
+    }//GEN-LAST:event_btnAlterarActionPerformed
+
+    private void tabFuncionarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabFuncionarioMouseClicked
+        String nomeFuncionario;
+        nomeFuncionario = String.valueOf(tabFuncionario.getValueAt(tabFuncionario.getSelectedRow(), 1));//linha e coluna
+        try {
+            func = DaoFuncionario.getFuncionario(nomeFuncionario);//pega uma empresa do metodo getEmpresa..DAO
+        } catch (SQLException ex) {
+            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+        }
+        txtCod.setText(String.valueOf(func.getCodigoFuncionario()));
+        txtNome.setText(func.getNomeFuncionario());
+        txtFuncao.setText(func.getFuncao());
+        cmbEmpresa.setSelectedItem(func.getNomeEmpresa());
+    }//GEN-LAST:event_tabFuncionarioMouseClicked
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        int resposta;
+        resposta = JOptionPane.showConfirmDialog(null, "Deseja realmete excluir?", "Pergunta", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (resposta == JOptionPane.YES_OPTION) {
+            carregarCampos();
+            try {
+                DaoFuncionario.deletarFuncionario(func);
+            } catch (SQLException ex) {
+                throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            }
+            carregarTabela();
+        }
+        List<JTextField> lista = jText();
+        config.limparCampos(lista);
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

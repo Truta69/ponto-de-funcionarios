@@ -18,13 +18,13 @@ public class DaoFuncionario {
     public static List<Funcionario> todosFuncionarios() {
         List<Funcionario> lista = new ArrayList<>();
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
-            String sql = "select * from tab_funcionario order by id_funcionario";
+            String sql = "select * from tab_funcionario ";
             PreparedStatement stm = c.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();//recebe resultado
             while (rs.next()) {
                 Funcionario f = new Funcionario();
-                f.setCodigo(rs.getInt("id_funcionario"));
-                f.setNome(rs.getString("nome_funcionario"));
+                f.setCodigoFuncionario(rs.getInt("id_funcionario"));
+                f.setNomeFuncionario(rs.getString("nome_funcionario"));
                 f.setFuncao(rs.getString("funcao"));
                 f.setCod_empresa(rs.getInt("id_empresa"));
                 lista.add(f);
@@ -35,7 +35,7 @@ public class DaoFuncionario {
         return lista;
     }
 
-    //p carregar combo empresas telade funcionarios
+    //p carregar combo empresas tela de funcionarios
     //vou fazer aqui...mas pera i.....:da p pegar da classe
     //daoempresa...e  o mesmo codigo...so aqui que list de string!!!!!talvez usar generics...
     public static List<String> todasEmpresas() {
@@ -57,7 +57,7 @@ public class DaoFuncionario {
         return todas;
     }
 
-    //para inserir o codigo empresa
+    //para inserir e alterar o codigo empresa
     private static int recuperaCodEmpresa(Funcionario f) throws SQLException {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             String sql = "select id_empresa from tab_empresa where nome_empresa= '" + f.getNomeEmpresa() + "'";
@@ -75,9 +75,47 @@ public class DaoFuncionario {
             int codRecebido = recuperaCodEmpresa(f);//declarada como static
             String sql = "insert into tab_funcionario(nome_funcionario,funcao,id_empresa)values(?,?,?) ";
             PreparedStatement pst = c.prepareStatement(sql);
-            pst.setString(1, f.getNome());
+            pst.setString(1, f.getNomeFuncionario());
             pst.setString(2, f.getFuncao());
             pst.setInt(3, codRecebido);
+            pst.executeUpdate();
+        }
+    }
+
+    public static void upDateFuncionario(Funcionario func) throws SQLException {
+        try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
+            int codRecebido = recuperaCodEmpresa(func);
+            String sql = "update  tab_funcionario set nome_funcionario =? ,funcao=?,id_empresa=? where id_funcionario=? ";
+            PreparedStatement pst = c.prepareStatement(sql);
+            pst.setString(1, func.getNomeFuncionario());
+            pst.setString(2, func.getFuncao());
+            pst.setInt(3, codRecebido);
+            pst.setInt(4, func.getCodigoFuncionario());
+            pst.executeUpdate();
+        }
+    }
+
+    //pega click da tabela
+    public static Funcionario getFuncionario(String nomeRecebido) throws SQLException {
+        try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
+            String sql = "select  * from tab_funcionario where  nome_funcionario='" + nomeRecebido + "'";
+            PreparedStatement pst = c.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            rs.next();
+            Funcionario f = new Funcionario();
+            f.setCodigoFuncionario(rs.getInt("id_funcionario"));
+            f.setNomeFuncionario(rs.getString("nome_funcionario"));
+            f.setFuncao(rs.getString("funcao"));
+            f.setCod_empresa(rs.getInt("id_empresa"));
+            return f;
+        }
+    }
+
+    public static void deletarFuncionario(Funcionario f) throws SQLException {
+        try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
+            String sql = "delete from tab_funcionario where id_funcionario=?";
+            PreparedStatement pst = c.prepareStatement(sql);
+            pst.setInt(1, f.getCodigoFuncionario());
             pst.executeUpdate();
         }
     }

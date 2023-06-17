@@ -1,4 +1,4 @@
-package janelas;
+package telas;
 
 import dao.DaoEmpresa;
 import eventos.ConfigurarCampos;
@@ -107,16 +107,16 @@ public class FrmEmpresa extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
         );
 
-        jPanel2.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(153, 153, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Codigo:");
+
+        txtCod.setEnabled(false);
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Nome:");
@@ -162,10 +162,10 @@ public class FrmEmpresa extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(39, 39, 39)
                         .addComponent(jLabel1)))
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        jPanel4.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel4.setBackground(new java.awt.Color(153, 153, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel4.setLayout(new java.awt.GridBagLayout());
 
@@ -213,6 +213,8 @@ public class FrmEmpresa extends javax.swing.JFrame {
 
         btnFechar.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         btnFechar.setText("Fechar");
+        btnFechar.setMaximumSize(new java.awt.Dimension(87, 31));
+        btnFechar.setMinimumSize(new java.awt.Dimension(87, 31));
         btnFechar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFecharActionPerformed(evt);
@@ -239,8 +241,8 @@ public class FrmEmpresa extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -252,31 +254,6 @@ public class FrmEmpresa extends javax.swing.JFrame {
         List<JTextField> listaDeCampos = Arrays.asList(txtCod, txtNome, txtCnpj);
         return listaDeCampos;
     }
-    private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
-        dispose();
-    }//GEN-LAST:event_btnFecharActionPerformed
-
-    //talvez usar classe de excecao p ver erro de entrada de dados...new classeException...
-    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        if (txtNome.getText().isEmpty() || txtCnpj.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Preencha os campos!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            carregarCampos();//CHAMA METODO COM CAMPOS P SALVAR
-            DaoEmpresa.inserirEmpresas(emp);
-            carregarTabela();//depois de inserir carrega tabela
-            List<JTextField> listaParaLimpar = jText();//lista recebe retorno do metodo com os campos 
-            config.limparCampos(listaParaLimpar);//chama metodo da classe e passa lista de campos p limpar
-        }
-    }//GEN-LAST:event_btnSalvarActionPerformed
-
-    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        carregarCampos();
-        DaoEmpresa.updateEmpresa(emp);
-        carregarTabela();
-        List<JTextField> lista = jText();
-        config.limparCampos(lista);
-    }//GEN-LAST:event_btnAlterarActionPerformed
-
     private void tabEmpresaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabEmpresaMouseClicked
         String nomeEmpresa;
         nomeEmpresa = String.valueOf(tabEmpresa.getValueAt(tabEmpresa.getSelectedRow(), 1));//linha e coluna
@@ -285,6 +262,10 @@ public class FrmEmpresa extends javax.swing.JFrame {
         txtNome.setText(emp.getNome());
         txtCnpj.setText(emp.getCnpj());
     }//GEN-LAST:event_tabEmpresaMouseClicked
+
+    private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
+        dispose();
+    }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         int resposta;
@@ -297,6 +278,27 @@ public class FrmEmpresa extends javax.swing.JFrame {
         List<JTextField> lista = jText();
         config.limparCampos(lista);
     }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+        carregarCampos();
+        DaoEmpresa.updateEmpresa(emp);
+        carregarTabela();
+        List<JTextField> lista = jText();
+        config.limparCampos(lista);
+    }//GEN-LAST:event_btnAlterarActionPerformed
+
+    //talvez usar classe de excecao p ver erro de entrada de dados...new classeException...
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        if (txtNome.getText().isEmpty() || txtCnpj.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha os campos!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            carregarCampos();//CHAMA METODO COM CAMPOS P SALVAR
+            DaoEmpresa.inserirEmpresas(emp);
+            carregarTabela();//depois de inserir carrega tabela
+            List<JTextField> listaParaLimpar = jText();//lista recebe retorno do metodo com os campos
+            config.limparCampos(listaParaLimpar);//chama metodo da classe e passa lista de campos p limpar
+        }
+    }//GEN-LAST:event_btnSalvarActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

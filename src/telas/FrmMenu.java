@@ -1,4 +1,4 @@
-package janelas;
+package telas;
 
 import eventos.EventosDoMouse;
 import java.util.Arrays;
@@ -97,6 +97,11 @@ public class FrmMenu extends javax.swing.JFrame {
 
         btnPonto.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         btnPonto.setText("PONTO");
+        btnPonto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPontoActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
@@ -152,6 +157,11 @@ public class FrmMenu extends javax.swing.JFrame {
         FrmFuncionario func = new FrmFuncionario();
         func.setVisible(true);
     }//GEN-LAST:event_btnFuncionarioActionPerformed
+
+    private void btnPontoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPontoActionPerformed
+        FrmPonto ponto = new FrmPonto();
+        ponto.setVisible(true);
+    }//GEN-LAST:event_btnPontoActionPerformed
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
