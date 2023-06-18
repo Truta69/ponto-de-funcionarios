@@ -3,14 +3,14 @@ package telas;
 import dao.DaoPonto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import modelo.Funcionario;
+import modelo.EntradaDeHorarios;
 
 public class FrmPonto extends javax.swing.JFrame {
 
     Funcionario func = new Funcionario();
+    EntradaDeHorarios entrada = new EntradaDeHorarios();
 
     public FrmPonto() {
         initComponents();
@@ -31,8 +31,16 @@ public class FrmPonto extends javax.swing.JFrame {
                 cmbPontoFuncionario.addItem(nomeRecebido);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(FrmPonto.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
         }
+    }
+
+    private void carregarCampos() {
+        entrada.setHora_entrada(txt_entrada.getText());
+        entrada.setHora_almoco(txt_almoco.getText());
+        entrada.setHora_retorno(txt_retorno.getText());
+        entrada.setHora_saida(txt_saida.getText());
+        entrada.setNome_funcionario((String) cmbPontoFuncionario.getSelectedItem());
     }
 
     @SuppressWarnings("unchecked")
@@ -51,13 +59,13 @@ public class FrmPonto extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         txtCnpj = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        txt_entrada = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        txt_almoco = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
+        txt_retorno = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
+        txt_saida = new javax.swing.JTextField();
         cmbPontoFuncionario = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
         txtPesquisa = new javax.swing.JTextField();
@@ -193,11 +201,11 @@ public class FrmPonto extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_entrada, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField6)))
+                        .addComponent(txt_almoco)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -213,11 +221,11 @@ public class FrmPonto extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_retorno, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_saida, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cmbPontoFuncionario, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -248,22 +256,27 @@ public class FrmPonto extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_entrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_almoco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_retorno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_saida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbPontoFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(22, 22, 22))
         );
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel2.setLayout(new java.awt.GridLayout());
+        jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
         btnSalvar.setText("Salvar");
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnSalvar);
 
         btnAlterar.setText("Alterar");
@@ -312,21 +325,19 @@ public class FrmPonto extends javax.swing.JFrame {
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void cmbPontoFuncionarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmbPontoFuncionarioMouseClicked
-//        ResultSet rs = null;
-//        func.setNomeEmpresa((String) cmbPontoFuncionario.getSelectedItem());
-//        try {
-//            rs = DaoPonto.todosFuncionarios();
-//            rs.first();
-//            txtNome.setText(func.getNomeFuncionario());
-//            txtFuncao.setText(func.getFuncao());
-//            txtEmp.setText(func.getNomeEmpresa());
-//            txtCnpj.setText(func.getCnpj());
-//
-//        } catch (SQLException ex) {
-//            Logger.getLogger(FrmPonto.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        func.setNomeFuncionario((String) cmbPontoFuncionario.getSelectedItem());
+        try {
+            Funcionario funcionario = DaoPonto.todosFuncionarios(func);
+            txtNome.setText(funcionario.getNomeFuncionario());
+            txtFuncao.setText(funcionario.getFuncao());
+            txtEmp.setText(funcionario.getNomeEmpresa());
+            txtCnpj.setText(funcionario.getCnpj());
+        } catch (SQLException ex) {
+            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+        }
     }//GEN-LAST:event_cmbPontoFuncionarioMouseClicked
 
+    //igual combo p escolher um   
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
         func.setNomeFuncionario(txtPesquisa.getText());
         try {
@@ -336,9 +347,18 @@ public class FrmPonto extends javax.swing.JFrame {
             txtEmp.setText(funcionario.getNomeEmpresa());
             txtCnpj.setText(funcionario.getCnpj());
         } catch (SQLException ex) {
-            Logger.getLogger(FrmPonto.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
         }
     }//GEN-LAST:event_btnPesquisarActionPerformed
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        try {
+            carregarCampos();
+            DaoPonto.inserirHorarios(entrada);
+        } catch (SQLException ex) {
+            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+        }
+    }//GEN-LAST:event_btnSalvarActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -392,14 +412,14 @@ public class FrmPonto extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField txtCnpj;
     private javax.swing.JTextField txtEmp;
     private javax.swing.JTextField txtFuncao;
     private javax.swing.JTextField txtNome;
     private javax.swing.JTextField txtPesquisa;
+    private javax.swing.JTextField txt_almoco;
+    private javax.swing.JTextField txt_entrada;
+    private javax.swing.JTextField txt_retorno;
+    private javax.swing.JTextField txt_saida;
     // End of variables declaration//GEN-END:variables
 }

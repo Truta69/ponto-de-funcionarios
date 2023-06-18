@@ -6,10 +6,16 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+/*S.O.L.I.D
+S=> CLASSE TEM QUE UMA UNICA RESPONSABILIDADE
+O=>USAR PADRAO STRATEGY
+L=>
+I=>USAR INTERAFACE ESPECIFICAS P QUE UMA CLASSE N PRECISE IMPLEMETAR UMA INTERFACE QUE N USA SEU METODOS..
+ */
 public class FrmMenu extends javax.swing.JFrame {
-    
-    private final EventosDoMouse eventos = new EventosDoMouse();
-    
+
+    private final EventosDoMouse eventosDoMouse = new EventosDoMouse();
+
     public FrmMenu() {
         initComponents();
         this.setExtendedState(MAXIMIZED_BOTH);
@@ -18,22 +24,22 @@ public class FrmMenu extends javax.swing.JFrame {
         carregarBotoes();
         alterarCorBotoes();
     }
-    
-    private List<JButton> jButton() {
+
+    private List<JButton> listaDeBotoes() {
         List<JButton> botoes = Arrays.asList(btnEmpresa, btnFuncionario, btnPonto);
         return botoes;
     }
-    
+
     private void carregarBotoes() {
-        List<JButton> btn = jButton();
-        eventos.carregarBotoes(btn);
+        List<JButton> btn = listaDeBotoes();
+        eventosDoMouse.renderizarBotoes(btn);
     }
-    
+
     private void alterarCorBotoes() {
-        List<JButton> lista = jButton();
-        eventos.pintarBotoes(lista);
+        List<JButton> lista = listaDeBotoes();
+        eventosDoMouse.alterarCor(lista);
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -162,7 +168,7 @@ public class FrmMenu extends javax.swing.JFrame {
         FrmPonto ponto = new FrmPonto();
         ponto.setVisible(true);
     }//GEN-LAST:event_btnPontoActionPerformed
-    
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

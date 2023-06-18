@@ -57,7 +57,7 @@ public class DaoFuncionario {
         return todas;
     }
 
-    //para inserir e alterar o codigo empresa
+    //para inserir  o codigo empresa
     private static int recuperaCodEmpresa(Funcionario f) throws SQLException {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             String sql = "select id_empresa from tab_empresa where nome_empresa= '" + f.getNomeEmpresa() + "'";
@@ -89,7 +89,8 @@ public class DaoFuncionario {
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setString(1, func.getNomeFuncionario());
             pst.setString(2, func.getFuncao());
-            pst.setInt(3, codRecebido);
+            //pst.setInt(3, codRecebido);
+            pst.setInt(3, func.getCod_empresa());
             pst.setInt(4, func.getCodigoFuncionario());
             pst.executeUpdate();
         }

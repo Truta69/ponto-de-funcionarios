@@ -38,12 +38,12 @@ public class FrmFuncionario extends javax.swing.JFrame {
 
     private void carregarBotoes() {
         List<JButton> btn = jButton();
-        eventos.carregarBotoes(btn);
+        eventos.renderizarBotoes(btn);
     }
 
     private void alterarCorBotoes() {
         List<JButton> lista = jButton();
-        eventos.pintarBotoes(lista);
+        eventos.alterarCor(lista);
     }
 
     private void carregarTabela() {

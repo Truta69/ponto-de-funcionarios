@@ -10,7 +10,7 @@ import javax.swing.JButton;
 
 public class EventosDoMouse {
 
-    public void carregarBotoes(List<JButton> btn) {
+    public void renderizarBotoes(List<JButton> btn) {
         btn.forEach((x) -> {
             x.setBackground(Color.WHITE);//branco
             x.setPreferredSize(new Dimension(150, 40));//tamanho dos botoes
@@ -18,7 +18,7 @@ public class EventosDoMouse {
         });
     }
 
-    public void pintarBotoes(List<JButton> btn) {
+    public void alterarCor(List<JButton> btn) {
         btn.forEach((jBtn) -> {
             jBtn.addMouseListener(new MouseAdapter() {
                 @Override

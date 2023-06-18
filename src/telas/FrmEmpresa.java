@@ -33,12 +33,12 @@ public class FrmEmpresa extends javax.swing.JFrame {
 
     private void carregarBotoes() {
         List<JButton> btn = jButton();//RECEBE LISTA DE BOTOES
-        eventos.carregarBotoes(btn);//METODO DA CLASSE PAra dar cor aos botoes ao carregar a tela
+        eventos.alterarCor(btn);//METODO DA CLASSE PAra dar cor aos botoes ao carregar a tela
     }
 
     private void alterarCorBotoes() {
         List<JButton> lista = jButton();//RECEBE LISTA DE BOTOES
-        eventos.pintarBotoes(lista);//AQUI O METODO ALTERNA A COR DOS BOTOES
+        eventos.renderizarBotoes(lista);//AQUI O METODO ALTERNA A COR DOS BOTOES
     }
 
     private void carregarTabela() {//ao carregar a tela
