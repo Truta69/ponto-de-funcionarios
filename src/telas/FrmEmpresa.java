@@ -13,35 +13,33 @@ import tabelaDesign.DesenharTabela;
 
 public class FrmEmpresa extends javax.swing.JFrame {
 
-    private final EventosDoMouse eventos = new EventosDoMouse();
-    private final ConfigurarCampos config = new ConfigurarCampos();//inicializa a variavel..
-    Empresa emp = new Empresa();
+    private final EventosDoMouse eventosDoMouse;
+    private final ConfigurarCampos configurarCampos;
+    private Empresa empresa;
 
     public FrmEmpresa() {
         initComponents();
+        this.eventosDoMouse = new EventosDoMouse();
+        this.configurarCampos = new ConfigurarCampos();
+        this.empresa = new Empresa();
         setSize(800, 500);
         setResizable(false);
         carregarTabela();
         carregarBotoes();
-        alterarCorBotoes();
     }
 
-    private List<JButton> jButton() {
+    private List<JButton> listaDeBotoes() {
         List<JButton> botoes = Arrays.asList(btnSalvar, btnAlterar, btnExcluir, btnFechar);
-        return botoes;//RETORNA LISTA DE BOTOES
+        return botoes;
     }
 
-    private void carregarBotoes() {
-        List<JButton> btn = jButton();//RECEBE LISTA DE BOTOES
-        eventos.alterarCor(btn);//METODO DA CLASSE PAra dar cor aos botoes ao carregar a tela
+    private void carregarBotoes() {//so um metodo p carregar botoes..ver frmMenu..
+        List<JButton> btn = listaDeBotoes();
+        eventosDoMouse.renderizarBotoes(btn);
+        eventosDoMouse.alterarCor(btn);
     }
 
-    private void alterarCorBotoes() {
-        List<JButton> lista = jButton();//RECEBE LISTA DE BOTOES
-        eventos.renderizarBotoes(lista);//AQUI O METODO ALTERNA A COR DOS BOTOES
-    }
-
-    private void carregarTabela() {//ao carregar a tela
+    private void carregarTabela() {
         List<Empresa> dados = DaoEmpresa.todasEmpresas();//classe dao pega um lista e retorna aqui p 'dados'
         String[] colunas = new String[]{"Codigo", "Nome", "CNPJ"};
         int[] larguraColunas = {50, 400, 100};
@@ -49,9 +47,15 @@ public class FrmEmpresa extends javax.swing.JFrame {
         desenhar.renderizarTabela(tabEmpresa, colunas, larguraColunas, dados);//e desenha a tabela c dados da empresa
     }
 
+    private List<JTextField> listaDeCampos() {//lista de campos usado p limpar
+        List<JTextField> listaDeCampos = Arrays.asList(txtCod, txtNome, txtCnpj);
+        return listaDeCampos;
+    }
+
+    //para inserir e alterar
     private void carregarCampos() {
-        emp.setNome(txtNome.getText());//AQUI SETA OS DADOS COM O CONTEUDO DOS CAMPOS
-        emp.setCnpj(txtCnpj.getText());
+        empresa.setNome(txtNome.getText());
+        empresa.setCnpj(txtCnpj.getText());
     }
 
     @SuppressWarnings("unchecked")
@@ -249,42 +253,41 @@ public class FrmEmpresa extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    //campos texto
-    private List<JTextField> jText() {//lista de campos usado p limpar
-        List<JTextField> listaDeCampos = Arrays.asList(txtCod, txtNome, txtCnpj);
-        return listaDeCampos;
-    }
+
     private void tabEmpresaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabEmpresaMouseClicked
         String nomeEmpresa;
         nomeEmpresa = String.valueOf(tabEmpresa.getValueAt(tabEmpresa.getSelectedRow(), 1));//linha e coluna
-        emp = DaoEmpresa.getEmpresa(nomeEmpresa);//pega uma empresa do metodo getEmpresa..DAO
-        txtCod.setText(String.valueOf(emp.getCodigo()));
-        txtNome.setText(emp.getNome());
-        txtCnpj.setText(emp.getCnpj());
+        empresa = DaoEmpresa.getEmpresa(nomeEmpresa);//pega uma empresa do metodo getEmpresa..DAO
+        txtCod.setText(String.valueOf(empresa.getCodigo()));
+        txtNome.setText(empresa.getNome());
+        txtCnpj.setText(empresa.getCnpj());
+        btnSalvar.setEnabled(false);
     }//GEN-LAST:event_tabEmpresaMouseClicked
 
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
         dispose();
     }//GEN-LAST:event_btnFecharActionPerformed
 
+    //alterado tab_funcionario p excluir funcionario ao excluir empresa
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         int resposta;
         resposta = JOptionPane.showConfirmDialog(null, "Deseja realmete excluir?", "Pergunta", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (resposta == JOptionPane.YES_OPTION) {
-            carregarCampos();
-            DaoEmpresa.deletarEmpresa(emp);
+            DaoEmpresa.deletarEmpresa(empresa);
             carregarTabela();
         }
-        List<JTextField> lista = jText();
-        config.limparCampos(lista);
+        List<JTextField> lista = listaDeCampos();
+        configurarCampos.limparCampos(lista);
+        btnSalvar.setEnabled(true);
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
         carregarCampos();
-        DaoEmpresa.updateEmpresa(emp);
+        DaoEmpresa.updateEmpresa(empresa);
         carregarTabela();
-        List<JTextField> lista = jText();
-        config.limparCampos(lista);
+        List<JTextField> lista = listaDeCampos();
+        configurarCampos.limparCampos(lista);
+        btnSalvar.setEnabled(true);
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     //talvez usar classe de excecao p ver erro de entrada de dados...new classeException...
@@ -292,11 +295,11 @@ public class FrmEmpresa extends javax.swing.JFrame {
         if (txtNome.getText().isEmpty() || txtCnpj.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Preencha os campos!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            carregarCampos();//CHAMA METODO COM CAMPOS P SALVAR
-            DaoEmpresa.inserirEmpresas(emp);
+            carregarCampos();
+            DaoEmpresa.inserirEmpresas(empresa);
             carregarTabela();//depois de inserir carrega tabela
-            List<JTextField> listaParaLimpar = jText();//lista recebe retorno do metodo com os campos
-            config.limparCampos(listaParaLimpar);//chama metodo da classe e passa lista de campos p limpar
+            List<JTextField> listaParaLimpar = listaDeCampos();
+            configurarCampos.limparCampos(listaParaLimpar);
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
 

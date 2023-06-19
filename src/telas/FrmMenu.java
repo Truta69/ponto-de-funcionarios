@@ -14,9 +14,10 @@ I=>USAR INTERAFACE ESPECIFICAS P QUE UMA CLASSE N PRECISE IMPLEMETAR UMA INTERFA
  */
 public class FrmMenu extends javax.swing.JFrame {
 
-    private final EventosDoMouse eventosDoMouse = new EventosDoMouse();
+    private final EventosDoMouse eventosDoMouse;
 
     public FrmMenu() {
+        this.eventosDoMouse = new EventosDoMouse();//incializa no construtor
         initComponents();
         this.setExtendedState(MAXIMIZED_BOTH);
         //trocar icone JFRAME..COM IMAGEM DO PACOTE IMG
@@ -26,13 +27,13 @@ public class FrmMenu extends javax.swing.JFrame {
     }
 
     private List<JButton> listaDeBotoes() {
-        List<JButton> botoes = Arrays.asList(btnEmpresa, btnFuncionario, btnPonto);
-        return botoes;
+        List<JButton> btns = Arrays.asList(btnEmpresa, btnFuncionario, btnPonto);
+        return btns;
     }
 
     private void carregarBotoes() {
-        List<JButton> btn = listaDeBotoes();
-        eventosDoMouse.renderizarBotoes(btn);
+        List<JButton> botoes = listaDeBotoes();
+        eventosDoMouse.renderizarBotoes(botoes);
     }
 
     private void alterarCorBotoes() {
