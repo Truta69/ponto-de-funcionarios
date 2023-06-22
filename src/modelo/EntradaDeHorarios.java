@@ -12,6 +12,9 @@ public class EntradaDeHorarios {
     int id_entrada;
     @Getter
     @Setter
+    int dia;
+    @Getter
+    @Setter
     String hora_entrada;
     @Getter
     @Setter
@@ -28,4 +31,10 @@ public class EntradaDeHorarios {
     @Getter
     @Setter
     String nome_funcionario;
+
+    @Override
+    public String toString() {
+        return id_entrada + "" + hora_entrada + "" + hora_almoco + "" + hora_retorno + "" + hora_saida + "" + id_funcionario;
+    }
+
 }

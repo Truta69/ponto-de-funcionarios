@@ -1,16 +1,23 @@
 package telas;
 
 import dao.DaoPonto;
+import eventos.ConfigurarCampos;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import modelo.Funcionario;
 import modelo.EntradaDeHorarios;
+import tabelaDesign.DesenharTabela;
 
 public class FrmPonto extends javax.swing.JFrame {
 
     Funcionario func = new Funcionario();
     EntradaDeHorarios entrada = new EntradaDeHorarios();
+    private final ConfigurarCampos config = new ConfigurarCampos();
 
     public FrmPonto() {
         initComponents();
@@ -18,7 +25,13 @@ public class FrmPonto extends javax.swing.JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        carregarTabela();
         carregarComboFuncionario();
+    }
+
+    private List<JTextField> listaDeCampos() {
+        List<JTextField> lista = Arrays.asList(txtDia, txt_entrada, txt_almoco, txt_retorno, txt_saida);
+        return lista;
     }
 
     private void carregarComboFuncionario() {
@@ -35,7 +48,16 @@ public class FrmPonto extends javax.swing.JFrame {
         }
     }
 
+    private void carregarTabela() {
+        List<EntradaDeHorarios> dados = DaoPonto.todosHorarios();
+        String[] colunas = new String[]{"Dia", "Entrada", "Almoço", "Retorno", "Saída"};
+        int[] larguraColunas = {50, 150, 150, 150, 150, 50};
+        DesenharTabela<EntradaDeHorarios> desenhar = new DesenharTabela<>();
+        desenhar.renderizarTabela(tabPonto, colunas, larguraColunas, dados);
+    }
+
     private void carregarCampos() {
+        entrada.setDia(Integer.parseInt(txtDia.getText()));
         entrada.setHora_entrada(txt_entrada.getText());
         entrada.setHora_almoco(txt_almoco.getText());
         entrada.setHora_retorno(txt_retorno.getText());
@@ -48,7 +70,7 @@ public class FrmPonto extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabPonto = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtNome = new javax.swing.JTextField();
@@ -68,8 +90,8 @@ public class FrmPonto extends javax.swing.JFrame {
         txt_saida = new javax.swing.JTextField();
         cmbPontoFuncionario = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
-        txtPesquisa = new javax.swing.JTextField();
-        btnPesquisar = new javax.swing.JButton();
+        txtDia = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         btnSalvar = new javax.swing.JButton();
         btnAlterar = new javax.swing.JButton();
@@ -81,8 +103,8 @@ public class FrmPonto extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
-        jTable1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabPonto.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        tabPonto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 { new Integer(1), null, null, null, null},
                 { new Integer(2), null, null, null, null},
@@ -135,15 +157,20 @@ public class FrmPonto extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
-            jTable1.getColumnModel().getColumn(4).setResizable(false);
+        tabPonto.getTableHeader().setReorderingAllowed(false);
+        tabPonto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabPontoMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tabPonto);
+        if (tabPonto.getColumnModel().getColumnCount() > 0) {
+            tabPonto.getColumnModel().getColumn(0).setResizable(false);
+            tabPonto.getColumnModel().getColumn(0).setPreferredWidth(30);
+            tabPonto.getColumnModel().getColumn(1).setResizable(false);
+            tabPonto.getColumnModel().getColumn(2).setResizable(false);
+            tabPonto.getColumnModel().getColumn(3).setResizable(false);
+            tabPonto.getColumnModel().getColumn(4).setResizable(false);
         }
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 255));
@@ -176,12 +203,9 @@ public class FrmPonto extends javax.swing.JFrame {
         jLabel9.setForeground(new java.awt.Color(255, 0, 51));
         jLabel9.setText("SELECIONE:");
 
-        btnPesquisar.setText("Pesquisar");
-        btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPesquisarActionPerformed(evt);
-            }
-        });
+        txtDia.setToolTipText("dia");
+
+        jLabel10.setText("Dia:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -219,20 +243,22 @@ public class FrmPonto extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_retorno, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_saida, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txt_retorno, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txt_saida, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cmbPontoFuncionario, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(txtPesquisa)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(txtDia)
+                                .addGap(91, 91, 91)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -249,10 +275,10 @@ public class FrmPonto extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(txtCnpj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnPesquisar))
+                    .addComponent(txtDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -280,6 +306,11 @@ public class FrmPonto extends javax.swing.JFrame {
         jPanel2.add(btnSalvar);
 
         btnAlterar.setText("Alterar");
+        btnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnAlterar);
 
         btnExcluir.setText("Excluir");
@@ -312,7 +343,7 @@ public class FrmPonto extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -337,28 +368,49 @@ public class FrmPonto extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_cmbPontoFuncionarioMouseClicked
 
-    //igual combo p escolher um   
-    private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-        func.setNomeFuncionario(txtPesquisa.getText());
-        try {
-            Funcionario funcionario = DaoPonto.todosFuncionarios(func);
-            txtNome.setText(funcionario.getNomeFuncionario());
-            txtFuncao.setText(funcionario.getFuncao());
-            txtEmp.setText(funcionario.getNomeEmpresa());
-            txtCnpj.setText(funcionario.getCnpj());
-        } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
-        }
-    }//GEN-LAST:event_btnPesquisarActionPerformed
-
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        try {
-            carregarCampos();
-            DaoPonto.inserirHorarios(entrada);
-        } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+        if (txtDia.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Informe o dia!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            try {
+                carregarCampos();
+                DaoPonto.inserirHorarios(entrada);
+            } catch (SQLException ex) {
+                throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            }
+            carregarTabela();
+            List<JTextField> listaParaLimpar = listaDeCampos();
+            config.limparCampos(listaParaLimpar);
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+        carregarCampos();
+        try {
+            DaoPonto.upDatePonto(entrada);
+        } catch (SQLException ex) {
+            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+        }
+        carregarTabela();
+        List<JTextField> listaParaLimpar = listaDeCampos();
+        config.limparCampos(listaParaLimpar);
+    }//GEN-LAST:event_btnAlterarActionPerformed
+
+    private void tabPontoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabPontoMouseClicked
+        String hora;
+        hora = String.valueOf(tabPonto.getValueAt(tabPonto.getSelectedRow(), 1));//linha e coluna
+        try {
+            entrada = DaoPonto.getHorarios(hora);//pega uma empresa do metodo getEmpresa..DAO
+        } catch (SQLException ex) {
+            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+        }
+        txtDia.setText(String.valueOf(entrada.getDia()));
+        txt_entrada.setText((entrada.getHora_entrada()));
+        txt_almoco.setText((entrada.getHora_almoco()));
+        txt_retorno.setText((entrada.getHora_retorno()));
+        txt_saida.setText((entrada.getHora_saida()));
+        cmbPontoFuncionario.setSelectedItem(entrada.getNome_funcionario());
+    }//GEN-LAST:event_tabPontoMouseClicked
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -396,10 +448,10 @@ public class FrmPonto extends javax.swing.JFrame {
     private javax.swing.JButton btnFechar;
     private javax.swing.JButton btnGravar;
     private javax.swing.JButton btnLimpar;
-    private javax.swing.JButton btnPesquisar;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JComboBox<String> cmbPontoFuncionario;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -411,12 +463,12 @@ public class FrmPonto extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tabPonto;
     private javax.swing.JTextField txtCnpj;
+    private javax.swing.JTextField txtDia;
     private javax.swing.JTextField txtEmp;
     private javax.swing.JTextField txtFuncao;
     private javax.swing.JTextField txtNome;
-    private javax.swing.JTextField txtPesquisa;
     private javax.swing.JTextField txt_almoco;
     private javax.swing.JTextField txt_entrada;
     private javax.swing.JTextField txt_retorno;

@@ -33,5 +33,4 @@ public class Funcionario {
     public String toString() {
         return nomeFuncionario;
     }
-    
 }

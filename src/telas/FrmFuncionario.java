@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import modelo.Funcionario;
+import modelo.Empresa;
 import tabelaDesign.DesenharTabela;
 
 public class FrmFuncionario extends javax.swing.JFrame {
@@ -18,6 +19,7 @@ public class FrmFuncionario extends javax.swing.JFrame {
     private final EventosDoMouse eventos = new EventosDoMouse();
     private final ConfigurarCampos config = new ConfigurarCampos();//inicializa a variavel..
     Funcionario func = new Funcionario();
+    //Empresa emp=new Empresa();
 
     public FrmFuncionario() {
         initComponents();

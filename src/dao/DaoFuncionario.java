@@ -18,7 +18,7 @@ public class DaoFuncionario {
     public static List<Funcionario> todosFuncionarios() {
         List<Funcionario> lista = new ArrayList<>();
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
-            String sql = "select * from tab_funcionario ";
+            String sql = "select * from tab_funcionario";
             PreparedStatement stm = c.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();//recebe resultado
             while (rs.next()) {
