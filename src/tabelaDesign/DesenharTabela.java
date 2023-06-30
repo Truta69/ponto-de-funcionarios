@@ -20,7 +20,7 @@ public class DesenharTabela<E> {
             tabela.getTableHeader().setReorderingAllowed(false);//NAO PODE REORDENAR
             tabela.setSelectionBackground(new Color(0, 0, 255));//cor linha selecionada
             tabela.setSelectionForeground(Color.WHITE);//cor fonte linha selecionada
-            tabela.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            tabela.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);//PEGAR TANMANHO DISPONIVEL DA COLUNA
             tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);//SO PODE SELECIONAR UM ELEMENTO NA TABELA
         }
     }

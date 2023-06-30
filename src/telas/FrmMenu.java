@@ -17,8 +17,8 @@ public class FrmMenu extends javax.swing.JFrame {
     private final EventosDoMouse eventosDoMouse;
 
     public FrmMenu() {
-        this.eventosDoMouse = new EventosDoMouse();//incializa no construtor
         initComponents();
+        this.eventosDoMouse = new EventosDoMouse();//incializa no construtor
         this.setExtendedState(MAXIMIZED_BOTH);
         //trocar icone JFRAME..COM IMAGEM DO PACOTE IMG
         this.setIconImage(new ImageIcon(getClass().getResource("/img/icone.png")).getImage());

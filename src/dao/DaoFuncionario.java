@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.Empresa;
 import modelo.Funcionario;
 
@@ -58,7 +60,7 @@ public class DaoFuncionario {
     }
 
     //para inserir  o codigo empresa
-    private static int recuperaCodEmpresa(Funcionario f) throws SQLException {
+    private static int recuperaCodEmpresa(Funcionario f) {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             String sql = "select id_empresa from tab_empresa where nome_empresa= '" + f.getNomeEmpresa() + "'";
             PreparedStatement ps = c.prepareStatement(sql);
@@ -66,11 +68,13 @@ public class DaoFuncionario {
             while (rs.next()) {
                 codEmpresa = rs.getInt("id_empresa");//result n esta posicionanado corretamente...sem rs.next...
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoFuncionario.class.getName()).log(Level.SEVERE, null, ex);
         }
         return codEmpresa;
     }
 
-    public static void inserirFuncionario(Funcionario f) throws SQLException {
+    public static void inserirFuncionario(Funcionario f) {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             int codRecebido = recuperaCodEmpresa(f);//declarada como static
             String sql = "insert into tab_funcionario(nome_funcionario,funcao,id_empresa)values(?,?,?) ";
@@ -79,10 +83,12 @@ public class DaoFuncionario {
             pst.setString(2, f.getFuncao());
             pst.setInt(3, codRecebido);
             pst.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoFuncionario.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static void upDateFuncionario(Funcionario func) throws SQLException {
+    public static void upDateFuncionario(Funcionario func) {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             int codRecebido = recuperaCodEmpresa(func);
             String sql = "update  tab_funcionario set nome_funcionario =? ,funcao=?,id_empresa=? where id_funcionario=? ";
@@ -93,31 +99,56 @@ public class DaoFuncionario {
             pst.setInt(3, func.getCod_empresa());
             pst.setInt(4, func.getCodigoFuncionario());
             pst.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoFuncionario.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     //pega click da tabela
-    public static Funcionario getFuncionario(String nomeRecebido) throws SQLException {
+    public static Funcionario getFuncionario(String nomeRecebido) {
+        Funcionario f = new Funcionario();
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             String sql = "select  * from tab_funcionario where  nome_funcionario='" + nomeRecebido + "'";
             PreparedStatement pst = c.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
             rs.next();
-            Funcionario f = new Funcionario();
+            //Funcionario f = new Funcionario();
             f.setCodigoFuncionario(rs.getInt("id_funcionario"));
             f.setNomeFuncionario(rs.getString("nome_funcionario"));
             f.setFuncao(rs.getString("funcao"));
             f.setCod_empresa(rs.getInt("id_empresa"));
-            return f;
+            //return f;
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoFuncionario.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return f;
     }
 
-    public static void deletarFuncionario(Funcionario f) throws SQLException {
+    public static void deletarFuncionario(Funcionario f) {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             String sql = "delete from tab_funcionario where id_funcionario=?";
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setInt(1, f.getCodigoFuncionario());
             pst.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoFuncionario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static List<Funcionario> dadosFuncionarios(String nomeRecebido) throws SQLException {
+        List<Funcionario> lista = new ArrayList<>();
+        try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
+            String sql = "select nome_funcionario, funcao, nome_empresa,cnpj from tab_funcionario as func join tab_empresa as emp on func.id_empresa=emp.id_empresa where nome_funcionario='" + nomeRecebido + "'";
+            PreparedStatement pst = c.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            rs.next();
+            Funcionario f = new Funcionario();
+            f.setNomeFuncionario(rs.getString("nome_funcionario"));
+            f.setFuncao(rs.getString("funcao"));
+            f.setNomeEmpresa(rs.getString("nome_empresa"));
+            f.setCnpj(rs.getString("cnpj"));
+            lista.add(f);
+            return lista;
         }
     }
 }

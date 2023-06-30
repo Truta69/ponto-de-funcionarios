@@ -9,6 +9,8 @@ import modelo.Funcionario;
 import modelo.EntradaDeHorarios;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DaoPonto {
 
@@ -23,10 +25,10 @@ public class DaoPonto {
             while (rs.next()) {
                 EntradaDeHorarios eh = new EntradaDeHorarios();
                 eh.setDia(rs.getInt("dia"));
-                eh.setHora_entrada(rs.getString("hora_entrada"));
-                eh.setHora_almoco(rs.getString("hora_almoco"));
-                eh.setHora_retorno(rs.getString("hora_retorno"));
-                eh.setHora_saida(rs.getString("hora_saida"));
+                eh.setHora_entrada(rs.getTime("hora_entrada"));
+                eh.setHora_almoco(rs.getTime("hora_almoco"));
+                eh.setHora_retorno(rs.getTime("hora_retorno"));
+                eh.setHora_saida(rs.getTime("hora_saida"));
                 lista.add(eh);
             }
         } catch (SQLException ex) {
@@ -36,7 +38,7 @@ public class DaoPonto {
     }
 
     //seleciona funcionario pelo click combobox ou btn pesquisar..
-    public static Funcionario todosFuncionarios(Funcionario f) throws SQLException {
+    public static Funcionario todosFuncionarios(Funcionario f) {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             String sql = "select * from tab_empresa  as emp join  tab_funcionario as func on emp.id_empresa=func.id_empresa where nome_funcionario ='" + f.getNomeFuncionario() + "'";
             PreparedStatement stm = c.prepareStatement(sql);
@@ -47,18 +49,23 @@ public class DaoPonto {
                 f.setNomeEmpresa(rs.getString("nome_empresa"));
                 f.setCnpj(rs.getString("cnpj"));
             }
-            return f;
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoPonto.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return f;
     }
 
     //carrega combo tela ponto
-    public static ResultSet carregar() throws SQLException {
+    public static ResultSet carregar() {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             String sql = "select nome_funcionario from tab_funcionario";
             PreparedStatement stm = c.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();//recebe resultado
             return rs;
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoPonto.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
 
     //p inserir
@@ -74,7 +81,7 @@ public class DaoPonto {
         return codFuncionarios;
     }
 
-    private static int recuperaCodFuncionario(EntradaDeHorarios eh) throws SQLException {
+    private static int recuperaCodFuncionario(EntradaDeHorarios eh) {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             String sql = "select id_funcionario from tab_funcionario where nome_funcionario= '" + eh.getNome_funcionario() + "'";
             PreparedStatement ps = c.prepareStatement(sql);
@@ -82,59 +89,85 @@ public class DaoPonto {
             while (rs.next()) {
                 codFuncionarios = rs.getInt("id_funcionario");//result n esta posicionanado corretamente...sem rs.next...
             }
+        } catch (SQLException ex) {
+            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
         }
         return codFuncionarios;
     }
 
     //salvar entrda de pontos
-    public static void inserirHorarios(EntradaDeHorarios entrada) throws SQLException {
+    public static void inserirHorarios(EntradaDeHorarios entrada) {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             int codRecebido = recuperaCodigoFuncionario(entrada);
             String sql = "insert into tab_ponto (dia,hora_entrada,hora_almoco,hora_retorno,hora_saida,id_funcionario)values(?,?,?,?,?,?)";
             //String sql = "update tab_ponto set  hora_entrada=?,hora_almoco=?,hora_retorno=?,hora_saida=?,id_funcionario where dia=?";
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setInt(1, entrada.getDia());
-            pst.setString(2, entrada.getHora_entrada());
-            pst.setString(3, entrada.getHora_almoco());
-            pst.setString(4, entrada.getHora_retorno());
-            pst.setString(5, entrada.getHora_saida());
+            pst.setTime(2, entrada.getHora_entrada());
+            pst.setTime(3, entrada.getHora_almoco());
+            pst.setTime(4, entrada.getHora_retorno());
+            pst.setTime(5, entrada.getHora_saida());
             pst.setInt(6, codRecebido);
             pst.executeUpdate();
+        } catch (SQLException ex) {
+            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
         }
     }
 
-    public static void upDatePonto(EntradaDeHorarios entra) throws SQLException {
+    public static void upDatePonto(EntradaDeHorarios entra) {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             int codRecebido = recuperaCodFuncionario(entra);
             String sql = "update  tab_ponto set hora_entrada =?, hora_almoco=?, hora_retorno=?, hora_saida=?, id_funcionario=?, dia = ? where id_ponto=? ";
             PreparedStatement pst = c.prepareStatement(sql);
-            pst.setString(1, entra.getHora_entrada());
-            pst.setString(2, entra.getHora_almoco());
-            pst.setString(3, entra.getHora_retorno());
-            pst.setString(4, entra.getHora_saida());
+            pst.setTime(1, entra.getHora_entrada());
+            pst.setTime(2, entra.getHora_almoco());
+            pst.setTime(3, entra.getHora_retorno());
+            pst.setTime(4, entra.getHora_saida());
             pst.setInt(5, entra.getId_funcionario());
             pst.setInt(6, entra.getDia());
             pst.setInt(7, entra.getId_entrada());
             pst.executeUpdate();
+        } catch (SQLException ex) {
+            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
         }
     }
-    //pega click da tabela
 
-    public static EntradaDeHorarios getHorarios(String horarios) throws SQLException {
+    //pega click da tabela
+    public static EntradaDeHorarios getHorarios(String horarios) {
+        EntradaDeHorarios ent = new EntradaDeHorarios();
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             String sql = "select  * from tab_ponto where  hora_entrada='" + horarios + "'";
             PreparedStatement pst = c.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
             rs.next();
-            EntradaDeHorarios ent = new EntradaDeHorarios();
             ent.setId_entrada(rs.getInt("id_ponto"));
-            ent.setHora_entrada(rs.getString("hora_entrada"));
-            ent.setHora_almoco(rs.getString("hora_almoco"));
-            ent.setHora_retorno(rs.getString("hora_retorno"));
-            ent.setHora_saida(rs.getString("hora_saida"));
+            ent.setHora_entrada(rs.getTime("hora_entrada"));
+            ent.setHora_almoco(rs.getTime("hora_almoco"));
+            ent.setHora_retorno(rs.getTime("hora_retorno"));
+            ent.setHora_saida(rs.getTime("hora_saida"));
             ent.setId_funcionario(rs.getInt("id_funcionario"));
             ent.setDia(rs.getInt("dia"));
-            return ent;
+        } catch (SQLException ex) {
+            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
         }
+        return ent;
+    }
+
+    public static void deletarHorarios(EntradaDeHorarios ent) {
+        try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
+            String sql = "delete from tab_ponto where id_ponto=?";
+            PreparedStatement pst = c.prepareStatement(sql);
+            pst.setInt(1, ent.getId_entrada());
+            pst.executeUpdate();
+        } catch (SQLException ex) {
+            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+        }
+    }
+
+    //alterar para receber um generic para limpar qualquer lista
+    public static List<EntradaDeHorarios> limparLista() {
+        List<EntradaDeHorarios> listaLimpa = new ArrayList<>();
+        listaLimpa.clear();//metodo inteface List...remove da lista..
+        return listaLimpa;
     }
 }

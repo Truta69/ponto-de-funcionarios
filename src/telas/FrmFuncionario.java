@@ -3,7 +3,6 @@ package telas;
 import dao.DaoFuncionario;
 import eventos.ConfigurarCampos;
 import eventos.EventosDoMouse;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JButton;
@@ -11,18 +10,18 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import modelo.Funcionario;
-import modelo.Empresa;
 import tabelaDesign.DesenharTabela;
 
 public class FrmFuncionario extends javax.swing.JFrame {
 
-    private final EventosDoMouse eventos = new EventosDoMouse();
-    private final ConfigurarCampos config = new ConfigurarCampos();//inicializa a variavel..
+    private final EventosDoMouse eventos; 
+    private final ConfigurarCampos config; 
     Funcionario func = new Funcionario();
-    //Empresa emp=new Empresa();
-
+    
     public FrmFuncionario() {
         initComponents();
+        eventos = new EventosDoMouse();
+        config = new ConfigurarCampos();
         setSize(800, 500);
         setResizable(false);
         setLocationRelativeTo(null);
@@ -79,7 +78,6 @@ public class FrmFuncionario extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -96,8 +94,8 @@ public class FrmFuncionario extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         btnSalvar = new javax.swing.JButton();
         btnAlterar = new javax.swing.JButton();
-        btnFechar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
+        btnFechar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -136,7 +134,7 @@ public class FrmFuncionario extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 208, Short.MAX_VALUE))
                     .addComponent(cmbEmpresa, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -189,12 +187,11 @@ public class FrmFuncionario extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
         );
 
         jPanel3.setBackground(new java.awt.Color(153, 153, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel3.setLayout(new java.awt.GridBagLayout());
 
         btnSalvar.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         btnSalvar.setText("Salvar");
@@ -203,14 +200,7 @@ public class FrmFuncionario extends javax.swing.JFrame {
                 btnSalvarActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 34;
-        gridBagConstraints.ipady = 22;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(13, 57, 13, 0);
-        jPanel3.add(btnSalvar, gridBagConstraints);
+        jPanel3.add(btnSalvar);
 
         btnAlterar.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         btnAlterar.setText("Alterar");
@@ -219,30 +209,7 @@ public class FrmFuncionario extends javax.swing.JFrame {
                 btnAlterarActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 30;
-        gridBagConstraints.ipady = 22;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(13, 18, 13, 0);
-        jPanel3.add(btnAlterar, gridBagConstraints);
-
-        btnFechar.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        btnFechar.setText("Fechar");
-        btnFechar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFecharActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 28;
-        gridBagConstraints.ipady = 22;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(13, 22, 13, 87);
-        jPanel3.add(btnFechar, gridBagConstraints);
+        jPanel3.add(btnAlterar);
 
         btnExcluir.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         btnExcluir.setText("Excluir");
@@ -251,14 +218,16 @@ public class FrmFuncionario extends javax.swing.JFrame {
                 btnExcluirActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 28;
-        gridBagConstraints.ipady = 22;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(13, 18, 13, 0);
-        jPanel3.add(btnExcluir, gridBagConstraints);
+        jPanel3.add(btnExcluir);
+
+        btnFechar.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        btnFechar.setText("Fechar");
+        btnFechar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFecharActionPerformed(evt);
+            }
+        });
+        jPanel3.add(btnFechar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -272,7 +241,7 @@ public class FrmFuncionario extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -282,68 +251,58 @@ public class FrmFuncionario extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
-        dispose();
-    }//GEN-LAST:event_btnFecharActionPerformed
-
-    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        if (txtNome.getText().isEmpty() || txtFuncao.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Preencha os campos!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            carregarCampos();
-            try {
-                DaoFuncionario.inserirFuncionario(func);
-            } catch (SQLException ex) {
-                throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
-            }
-            carregarTabela();
-            List<JTextField> listaParaLimpar = jText();//lista recebe retorno do metodo com os campos 
-            config.limparCampos(listaParaLimpar);//chama metodo da classe e passa lista de campos p limpar
-        }
-    }//GEN-LAST:event_btnSalvarActionPerformed
-
-    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        carregarCampos();
-        try {
-            DaoFuncionario.upDateFuncionario(func);
-        } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
-        }
-        carregarTabela();
-        List<JTextField> listaParaLimpar = jText();
-        config.limparCampos(listaParaLimpar);
-
-    }//GEN-LAST:event_btnAlterarActionPerformed
-
     private void tabFuncionarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabFuncionarioMouseClicked
         String nomeFuncionario;
         nomeFuncionario = String.valueOf(tabFuncionario.getValueAt(tabFuncionario.getSelectedRow(), 1));//linha e coluna
-        try {
-            func = DaoFuncionario.getFuncionario(nomeFuncionario);//pega uma empresa do metodo getEmpresa..DAO
-        } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
-        }
+        func = DaoFuncionario.getFuncionario(nomeFuncionario);//pega uma empresa do metodo getEmpresa..DAO
         txtCod.setText(String.valueOf(func.getCodigoFuncionario()));
         txtNome.setText(func.getNomeFuncionario());
         txtFuncao.setText(func.getFuncao());
         cmbEmpresa.setSelectedItem(func.getNomeEmpresa());
+        btnSalvar.setEnabled(false);
     }//GEN-LAST:event_tabFuncionarioMouseClicked
+
+    private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
+        dispose();
+    }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         int resposta;
         resposta = JOptionPane.showConfirmDialog(null, "Deseja realmete excluir?", "Pergunta", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (resposta == JOptionPane.YES_OPTION) {
             carregarCampos();
-            try {
-                DaoFuncionario.deletarFuncionario(func);
-            } catch (SQLException ex) {
-                throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
-            }
+            DaoFuncionario.deletarFuncionario(func);
             carregarTabela();
         }
         List<JTextField> lista = jText();
         config.limparCampos(lista);
+        btnSalvar.setEnabled(true);
     }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+        if (txtNome.getText().isEmpty() || txtFuncao.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha os campos!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            carregarCampos();
+            DaoFuncionario.upDateFuncionario(func);
+            carregarTabela();
+            List<JTextField> listaParaLimpar = jText();
+            config.limparCampos(listaParaLimpar);
+            btnSalvar.setEnabled(true);
+        }
+    }//GEN-LAST:event_btnAlterarActionPerformed
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        if (txtNome.getText().isEmpty() || txtFuncao.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha os campos!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            carregarCampos();
+            DaoFuncionario.inserirFuncionario(func);
+            carregarTabela();
+            List<JTextField> listaParaLimpar = jText();//lista recebe retorno do metodo com os campos
+            config.limparCampos(listaParaLimpar);//chama metodo da classe e passa lista de campos p limpar
+        }
+    }//GEN-LAST:event_btnSalvarActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -397,5 +356,4 @@ public class FrmFuncionario extends javax.swing.JFrame {
     private javax.swing.JTextField txtFuncao;
     private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables
-
 }

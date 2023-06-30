@@ -8,7 +8,7 @@ public class ModeloTabela extends AbstractTableModel {
     private List linhas = null;//tipo de um vetor para linhas
     private String[] colunas = null;//vetor para colunas
 
-    //tentando fazer uso do padro static metodo
+//    //tentando fazer uso do padro static metodo
     private ModeloTabela(List numLinhas, String[] numColunas) {//passa parametros
         setLinhas(numLinhas);
         setColunas(numColunas);
