@@ -22,6 +22,8 @@ import eventos.EventosDoMouse;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.Time;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 
 public class FrmPonto extends javax.swing.JFrame {
@@ -617,19 +619,40 @@ public class FrmPonto extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLimparActionPerformed
 
     private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
+//        String nomeRecebido = (String) cmbPontoFuncionario.getSelectedItem();
+//        List<EntradaDeHorarios> dadosRecebidos = DaoPonto.todosHorarios();
+//        try {
+//            List<Funcionario> funcionarios = DaoFuncionario.dadosFuncionarios(nomeRecebido);
+//            FileWriter arq = new FileWriter("C:\\testeGravar\\listaEnviada.txt");
+//            try (PrintWriter gravarArq = new PrintWriter(arq)) {
+//                funcionarios.stream().forEach(e -> gravarArq.printf("%s%n", (e)));
+//                dadosRecebidos.stream().forEach(e -> gravarArq.printf("%s%n", (e)));
+//            }
+//        } catch (IOException ex) {
+//            throw new RuntimeException("Erro de gravação..!!" + ex);
+//        } catch (SQLException ex) {
+//            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+//        }
+
         String nomeRecebido = (String) cmbPontoFuncionario.getSelectedItem();
         List<EntradaDeHorarios> dadosRecebidos = DaoPonto.todosHorarios();
         try {
             List<Funcionario> funcionarios = DaoFuncionario.dadosFuncionarios(nomeRecebido);
             FileWriter arq = new FileWriter("C:\\testeGravar\\listaEnviada.txt");
-            try (PrintWriter gravarArq = new PrintWriter(arq)) {
-                funcionarios.stream().forEach(e -> gravarArq.printf("%s%n", (e)));
-                dadosRecebidos.stream().forEach(e -> gravarArq.printf("%s%n", (e)));
+            String cabecalho = String.format("%-20s %-25s %-22s %-23s", "entrada", "almoco", "retorno","saida");
+            arq.write(cabecalho);
+            arq.write("\n");
+            for (int i = 0; i < dadosRecebidos.size(); i++) {
+                //arq.write(String.format("%-15s",dadosRecebidos.get(i).toString()));
+                String linha = String.format("%-20s %-20s %-20s %-20s", dadosRecebidos.get(i).getHora_entrada(), dadosRecebidos.get(i).getHora_almoco(), dadosRecebidos.get(i).getHora_retorno(), dadosRecebidos.get(i).getHora_saida());
+                arq.write(linha);
+                arq.write("\n");
             }
+            arq.close();
         } catch (IOException ex) {
-            throw new RuntimeException("Erro de gravação..!!" + ex);
+            Logger.getLogger(FrmPonto.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            Logger.getLogger(FrmPonto.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnGravarActionPerformed
 
