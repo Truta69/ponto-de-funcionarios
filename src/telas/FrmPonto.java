@@ -5,13 +5,11 @@ import eventos.ConfigurarCampos;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import modelo.Funcionario;
@@ -22,33 +20,22 @@ import eventos.EventosDoMouse;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.Time;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 
 public class FrmPonto extends javax.swing.JFrame {
 
-    private final EventosDoMouse eventosDoMouse;
-    private final Funcionario func;
-    private EntradaDeHorarios entrada;
-    private final ConfigurarCampos config;
+    private final EventosDoMouse eventosDoMouse = new EventosDoMouse();
+    private final Funcionario func = new Funcionario();
+    private EntradaDeHorarios entrada = new EntradaDeHorarios();
+    private final ConfigurarCampos config = new ConfigurarCampos();
 
     public FrmPonto() {
         initComponents();
-        this.eventosDoMouse = new EventosDoMouse();
-        config = new ConfigurarCampos();
-        func = new Funcionario();
-        entrada = new EntradaDeHorarios();
         setSize(800, 500);
-        setResizable(false);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         carregarBotoes();
         carregarTabela();
         carregarComboFuncionario();
-        captura();
-        getRootPane().setDefaultButton(btnSalvar);
-
+        getRootPane().setDefaultButton(btnSalvar);//pegar clique ao dar enter..
     }
 
     private void captura() {
@@ -88,7 +75,7 @@ public class FrmPonto extends javax.swing.JFrame {
                 cmbPontoFuncionario.addItem(nomeRecebido);
             }
         } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            JOptionPane.showMessageDialog(null, "Erro ao carregar funcionarios!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -151,6 +138,7 @@ public class FrmPonto extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
+        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -619,40 +607,24 @@ public class FrmPonto extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLimparActionPerformed
 
     private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
-//        String nomeRecebido = (String) cmbPontoFuncionario.getSelectedItem();
-//        List<EntradaDeHorarios> dadosRecebidos = DaoPonto.todosHorarios();
-//        try {
-//            List<Funcionario> funcionarios = DaoFuncionario.dadosFuncionarios(nomeRecebido);
-//            FileWriter arq = new FileWriter("C:\\testeGravar\\listaEnviada.txt");
-//            try (PrintWriter gravarArq = new PrintWriter(arq)) {
-//                funcionarios.stream().forEach(e -> gravarArq.printf("%s%n", (e)));
-//                dadosRecebidos.stream().forEach(e -> gravarArq.printf("%s%n", (e)));
-//            }
-//        } catch (IOException ex) {
-//            throw new RuntimeException("Erro de gravação..!!" + ex);
-//        } catch (SQLException ex) {
-//            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
-//        }
-
         String nomeRecebido = (String) cmbPontoFuncionario.getSelectedItem();
         List<EntradaDeHorarios> dadosRecebidos = DaoPonto.todosHorarios();
         try {
             List<Funcionario> funcionarios = DaoFuncionario.dadosFuncionarios(nomeRecebido);
             FileWriter arq = new FileWriter("C:\\testeGravar\\listaEnviada.txt");
-            String cabecalho = String.format("%-20s %-25s %-22s %-23s", "entrada", "almoco", "retorno","saida");
+            String cabecalho = String.format("%-20s %-25s %-22s %-23s", "entrada", "almoco", "retorno", "saida");
             arq.write(cabecalho);
             arq.write("\n");
             for (int i = 0; i < dadosRecebidos.size(); i++) {
-                //arq.write(String.format("%-15s",dadosRecebidos.get(i).toString()));
                 String linha = String.format("%-20s %-20s %-20s %-20s", dadosRecebidos.get(i).getHora_entrada(), dadosRecebidos.get(i).getHora_almoco(), dadosRecebidos.get(i).getHora_retorno(), dadosRecebidos.get(i).getHora_saida());
                 arq.write(linha);
                 arq.write("\n");
             }
             arq.close();
-        } catch (IOException ex) {
-            Logger.getLogger(FrmPonto.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(FrmPonto.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao carregar funcionarios!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao gravar funcionarios!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnGravarActionPerformed
 
@@ -662,7 +634,7 @@ public class FrmPonto extends javax.swing.JFrame {
             File file = seletorDeArquivos.getSelectedFile();
             String nome = file.getName();
         } else {
-            System.out.println("File access cancelled by user.");
+            System.out.println("Acesso negado!");
         }
     }//GEN-LAST:event_btnSelecionarActionPerformed
 

@@ -9,8 +9,7 @@ import modelo.Funcionario;
 import modelo.EntradaDeHorarios;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class DaoPonto {
 
@@ -32,7 +31,7 @@ public class DaoPonto {
                 lista.add(eh);
             }
         } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            JOptionPane.showMessageDialog(null, "Erro ao carregar horários!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
         return lista;
     }
@@ -50,7 +49,7 @@ public class DaoPonto {
                 f.setCnpj(rs.getString("cnpj"));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DaoPonto.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao recuperar horários!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
         return f;
     }
@@ -63,7 +62,7 @@ public class DaoPonto {
             ResultSet rs = stm.executeQuery();//recebe resultado
             return rs;
         } catch (SQLException ex) {
-            Logger.getLogger(DaoPonto.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao carregar combo de funcionarios!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
         return null;
     }
@@ -90,7 +89,7 @@ public class DaoPonto {
                 codFuncionarios = rs.getInt("id_funcionario");//result n esta posicionanado corretamente...sem rs.next...
             }
         } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            JOptionPane.showMessageDialog(null, "Erro ao recuperar ID de funcionarios!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
         return codFuncionarios;
     }
@@ -110,7 +109,7 @@ public class DaoPonto {
             pst.setInt(6, codRecebido);
             pst.executeUpdate();
         } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            JOptionPane.showMessageDialog(null, "Erro ao inserir horarios!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -128,7 +127,7 @@ public class DaoPonto {
             pst.setInt(7, entra.getId_entrada());
             pst.executeUpdate();
         } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar horarios!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -148,7 +147,7 @@ public class DaoPonto {
             ent.setId_funcionario(rs.getInt("id_funcionario"));
             ent.setDia(rs.getInt("dia"));
         } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            JOptionPane.showMessageDialog(null, "Erro ao carregar tabela!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
         return ent;
     }
@@ -160,7 +159,7 @@ public class DaoPonto {
             pst.setInt(1, ent.getId_entrada());
             pst.executeUpdate();
         } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            JOptionPane.showMessageDialog(null, "Erro ao excluir horários!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
     }
 

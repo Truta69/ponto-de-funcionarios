@@ -7,17 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import modelo.Empresa;
 
 public class DaoEmpresa {
-
-    static {//chama uma vez;sera que p colocar na jenela principal(menu), pois ele executa umavez?????
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException ex) {
-            ex.getMessage();
-        }
-    }
 
     public static List<Empresa> todasEmpresas() {
         List<Empresa> todas = new ArrayList<>();
@@ -33,7 +26,7 @@ public class DaoEmpresa {
                 todas.add(emp);
             }
         } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            JOptionPane.showMessageDialog(null, "Erro ao carregar empresas!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
         return todas;
     }
@@ -46,25 +39,25 @@ public class DaoEmpresa {
             stm.setString(2, emp.getCnpj());
             stm.executeUpdate();//para insert
         } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            JOptionPane.showMessageDialog(null, "Erro ao inserir empresa!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     //CARREGAR CAMPOS PELO CLICK NA LINHA TABELA pega uma empresa.. nao uma lista
     public static Empresa getEmpresa(String nomeRecebido) {
+        Empresa emp = new Empresa();
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             String sql = "select  * from tab_empresa where  nome_empresa='" + nomeRecebido + "'";
             PreparedStatement pst = c.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();//recebe resultado para consultas
             rs.next();//
-            Empresa emp = new Empresa();
             emp.setCodigo(rs.getInt("id_empresa"));
             emp.setNome(rs.getString("nome_empresa"));
             emp.setCnpj(rs.getString("cnpj"));
-            return emp;
         } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            JOptionPane.showMessageDialog(null, "Erro ao recuperar empresa!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
+        return emp;
     }
 
     public static void updateEmpresa(Empresa emp) {
@@ -76,7 +69,7 @@ public class DaoEmpresa {
             pst.setInt(3, emp.getCodigo());
             pst.executeUpdate();
         } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar empresa!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -87,7 +80,7 @@ public class DaoEmpresa {
             pst.setInt(1, empresa.getCodigo());
             pst.executeUpdate();
         } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            JOptionPane.showMessageDialog(null, "Erro ao excluir empresa!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import javax.swing.JButton;
 
 public class EventosDoMouse {
-
+    
     public void renderizarBotoes(List<JButton> btn) {
         btn.forEach((x) -> {
             x.setBackground(Color.WHITE);//branco
@@ -17,7 +17,7 @@ public class EventosDoMouse {
             x.setFont(new Font("Arial", Font.BOLD, 16));//fonte, estilo e tamnaho
         });
     }
-
+    
     public void alterarCor(List<JButton> btn) {
         btn.forEach((jBtn) -> {
             jBtn.addMouseListener(new MouseAdapter() {
@@ -26,7 +26,7 @@ public class EventosDoMouse {
                     jBtn.setBackground(Color.WHITE);//quqndo sai volta a cor
                     jBtn.setForeground(Color.BLACK);
                 }
-
+                
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     jBtn.setBackground(Color.BLACK);

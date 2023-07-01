@@ -7,8 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import modelo.Empresa;
 import modelo.Funcionario;
 
@@ -32,7 +31,7 @@ public class DaoFuncionario {
                 lista.add(f);
             }
         } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            JOptionPane.showMessageDialog(null, "Erro ao varregar funcionario!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
         return lista;
     }
@@ -54,7 +53,7 @@ public class DaoFuncionario {
                 todas.add(emp.toString());
             }
         } catch (SQLException ex) {
-            throw new RuntimeException("Não foi possivel executar a conexão!!" + ex);
+            JOptionPane.showMessageDialog(null, "Erro ao recuperar empresa!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
         return todas;
     }
@@ -69,7 +68,7 @@ public class DaoFuncionario {
                 codEmpresa = rs.getInt("id_empresa");//result n esta posicionanado corretamente...sem rs.next...
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DaoFuncionario.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao recuperar empresa para inserir!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
         return codEmpresa;
     }
@@ -84,7 +83,7 @@ public class DaoFuncionario {
             pst.setInt(3, codRecebido);
             pst.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(DaoFuncionario.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao inserir funcionario!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -100,7 +99,7 @@ public class DaoFuncionario {
             pst.setInt(4, func.getCodigoFuncionario());
             pst.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(DaoFuncionario.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar funcionario!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -119,7 +118,7 @@ public class DaoFuncionario {
             f.setCod_empresa(rs.getInt("id_empresa"));
             //return f;
         } catch (SQLException ex) {
-            Logger.getLogger(DaoFuncionario.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao carregar tabela!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
         return f;
     }
@@ -131,7 +130,7 @@ public class DaoFuncionario {
             pst.setInt(1, f.getCodigoFuncionario());
             pst.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(DaoFuncionario.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao excluir funcionario!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
     }
 
