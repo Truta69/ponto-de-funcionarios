@@ -285,7 +285,7 @@ public class FrmFuncionario extends javax.swing.JFrame {
             carregarTabela();
         }
         List<JTextField> lista = jText();
-        config.limparCampos(lista);
+        //config.limparCampos(lista);
         btnSalvar.setEnabled(true);
     }//GEN-LAST:event_btnExcluirActionPerformed
 
@@ -297,7 +297,7 @@ public class FrmFuncionario extends javax.swing.JFrame {
             DaoFuncionario.upDateFuncionario(func);
             carregarTabela();
             List<JTextField> listaParaLimpar = jText();
-            config.limparCampos(listaParaLimpar);
+            //config.limparCampos(listaParaLimpar);
             btnSalvar.setEnabled(true);
         }
     }//GEN-LAST:event_btnAlterarActionPerformed
@@ -310,7 +310,7 @@ public class FrmFuncionario extends javax.swing.JFrame {
             DaoFuncionario.inserirFuncionario(func);
             carregarTabela();
             List<JTextField> listaParaLimpar = jText();//lista recebe retorno do metodo com os campos
-            config.limparCampos(listaParaLimpar);//chama metodo da classe e passa lista de campos p limpar
+            //config.limparCampos(listaParaLimpar);//chama metodo da classe e passa lista de campos p limpar
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
 

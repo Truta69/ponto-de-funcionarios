@@ -1,12 +1,18 @@
 
+import java.time.Duration;
+import java.time.LocalTime;
+
 public class SomarHoraNormal {
-    
-    public String somar(String h1, String h2) {
-        String retorno = "";
-        double d1 = Double.parseDouble(h1);
-        double d2 = Double.parseDouble(h2);
-        double result = d2 - d1;
-        retorno = String.valueOf(result);
-        return retorno;
+
+    String intervalo(LocalTime horaInicial, LocalTime horaFinal) {
+        if (horaInicial.isAfter(horaFinal)) {
+            LocalTime temp = horaInicial;
+            horaInicial = horaFinal;
+            horaFinal = temp;
+        }
+        Duration diff = Duration.between(horaInicial, horaFinal);
+        long diffHours = diff.toHours();
+        long diffMinutes = diff.minusHours(diffHours).toMinutes();
+        return String.format("%d:%02d", diffHours, diffMinutes);
     }
 }

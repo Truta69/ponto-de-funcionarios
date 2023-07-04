@@ -259,7 +259,7 @@ public class FrmEmpresa extends javax.swing.JFrame {
             carregarTabela();
         }
         List<JTextField> lista = listaDeCampos();
-        configurarCampos.limparCampos(lista);
+        //configurarCampos.limparCampos(lista);
         btnSalvar.setEnabled(true);
     }//GEN-LAST:event_btnExcluirActionPerformed
 
@@ -268,7 +268,7 @@ public class FrmEmpresa extends javax.swing.JFrame {
         DaoEmpresa.updateEmpresa(empresa);
         carregarTabela();
         List<JTextField> lista = listaDeCampos();
-        configurarCampos.limparCampos(lista);
+        //configurarCampos.limparCampos(lista);
         btnSalvar.setEnabled(true);
     }//GEN-LAST:event_btnAlterarActionPerformed
 
@@ -281,7 +281,7 @@ public class FrmEmpresa extends javax.swing.JFrame {
             DaoEmpresa.inserirEmpresas(empresa);
             carregarTabela();//depois de inserir carrega tabela
             List<JTextField> listaParaLimpar = listaDeCampos();
-            configurarCampos.limparCampos(listaParaLimpar);
+            //configurarCampos.limparCampos(listaParaLimpar);
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
