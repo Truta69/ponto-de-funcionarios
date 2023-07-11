@@ -15,9 +15,6 @@ public class Funcionario {
     private String nomeFuncionario;
     @Getter
     @Setter
-    private String funcao;
-    @Getter
-    @Setter
     private Empresa empresa;//n consegui usar..
     @Getter
     @Setter
@@ -28,6 +25,9 @@ public class Funcionario {
     @Getter
     @Setter
     private String cnpj;//usar p  tela de ponto..
+    @Getter
+    @Setter
+    private String cargaHoraria;
 
     @Override
     public String toString() {

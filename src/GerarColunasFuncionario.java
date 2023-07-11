@@ -16,7 +16,7 @@ public class GerarColunasFuncionario {
                 case 1:
                     return f.getNomeFuncionario();
                 case 2:
-                    return f.getFuncao();
+                    return f.getCargaHoraria();
                 case 3:
                     return f.getCod_empresa();
             }

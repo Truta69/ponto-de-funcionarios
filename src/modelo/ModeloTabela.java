@@ -51,7 +51,7 @@ public class ModeloTabela extends AbstractTableModel {
                 case 1:
                     return f.getNomeFuncionario();
                 case 2:
-                    return f.getFuncao();
+                    return f.getCargaHoraria();
                 case 3:
                     return f.getCod_empresa();
             }
@@ -70,7 +70,7 @@ public class ModeloTabela extends AbstractTableModel {
                 case 4:
                     return ent.getHora_saida();
                 case 5:
-                    return ent.getId_funcionario();
+                    return ent.getHora_total();
             }
         }
         return null;
@@ -98,4 +98,5 @@ public class ModeloTabela extends AbstractTableModel {
     public void setColunas(String[] colunas) {
         this.colunas = colunas;
     }
+
 }

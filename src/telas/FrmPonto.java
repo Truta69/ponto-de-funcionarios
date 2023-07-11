@@ -16,13 +16,20 @@ import modelo.EntradaDeHorarios;
 import tabelaDesign.DesenharTabela;
 import dao.DaoFuncionario;
 import eventos.EventosDoMouse;
+import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.sql.Time;
+import java.text.ParseException;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import javax.swing.BorderFactory;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.MaskFormatter;
+import pacoteSomar.SomarHoraNormal;
 
 public class FrmPonto extends javax.swing.JFrame {
 
@@ -30,15 +37,29 @@ public class FrmPonto extends javax.swing.JFrame {
     private final Funcionario func = new Funcionario();
     private EntradaDeHorarios entrada = new EntradaDeHorarios();
     private final ConfigurarCampos config = new ConfigurarCampos();
+    SomarHoraNormal somarHoras = new SomarHoraNormal();
 
     public FrmPonto() {
         initComponents();
+        getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));
         this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         carregarBotoes();
         carregarTabela();
         carregarComboFuncionario();
         getRootPane().setDefaultButton(btnSalvar);//pegar clique ao dar enter..
         gerarMascara();
+    }
+
+    private void gerarMascara() {
+        try {
+            MaskFormatter mask = new MaskFormatter("##:##");
+            jFormatted_txt_entrada.setFormatterFactory(new DefaultFormatterFactory(mask));
+            jFormatted_txt_almoco.setFormatterFactory(new DefaultFormatterFactory(mask));
+            jFormatted_txt_retorno.setFormatterFactory(new DefaultFormatterFactory(mask));
+            jFormatted_txt_saida.setFormatterFactory(new DefaultFormatterFactory(mask));
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(null, "Erro de formatação!" + ex);
+        }
     }
 
     private void captura() {
@@ -65,17 +86,11 @@ public class FrmPonto extends javax.swing.JFrame {
 
     private List<JFormattedTextField> listaDeCampos() {
         List<JFormattedTextField> lista = new ArrayList<>();
-        lista.add(jFormatted_txt_saida);
         lista.add(jFormatted_txt_entrada);
         lista.add(jFormatted_txt_almoco);
         lista.add(jFormatted_txt_retorno);
         lista.add(jFormatted_txt_saida);
         return lista;
-    }
-
-    private void gerarMascara() {
-        List<JFormattedTextField> txt_formatado = listaDeCampos();
-        config.mascararHora(txt_formatado);
     }
 
     private void carregarComboFuncionario() {
@@ -94,25 +109,19 @@ public class FrmPonto extends javax.swing.JFrame {
 
     private void carregarTabela() {
         List<EntradaDeHorarios> dados = DaoPonto.todosHorarios();
-        String[] colunas = new String[]{"Dia", "Entrada", "Almoço", "Retorno", "Saída", "Horas normais", "Horas extras", "Horas noturnas"};
+        String[] colunas = new String[]{"Dia", "Entrada", "Almoço", "Retorno", "Saída", "Hrs. normais", "Horas extras", "Horas noturnas"};
         int[] larguraColunas = {50, 50, 50, 50, 50, 50, 50, 50};
         DesenharTabela<EntradaDeHorarios> desenhar = new DesenharTabela<>();
         desenhar.renderizarTabela(tabPonto, colunas, larguraColunas, dados);
     }
 
-    private void somar() {
-        Time hora1 = Time.valueOf("10:30:00");
-        Time hora2 = Time.valueOf("02:45:00");
-        long soma = hora1.getTime() + hora2.getTime();
-        Time hora3 = new Time(soma);
-    }
-
     private void carregarCampos() {
         entrada.setDia(Integer.parseInt(txtDia.getText()));
-        entrada.setHora_entrada(Time.valueOf(jFormatted_txt_entrada.getText() + ":00"));
-        entrada.setHora_almoco(Time.valueOf(jFormatted_txt_almoco.getText() + ":00"));
-        entrada.setHora_retorno(Time.valueOf(jFormatted_txt_retorno.getText() + ":00"));
-        entrada.setHora_saida(Time.valueOf(jFormatted_txt_saida.getText() + ":00"));
+        entrada.setHora_entrada((jFormatted_txt_entrada.getText()));
+        entrada.setHora_almoco((jFormatted_txt_almoco.getText()));
+        entrada.setHora_retorno((jFormatted_txt_retorno.getText()));
+        entrada.setHora_saida((jFormatted_txt_saida.getText()));
+        entrada.setHora_total(txtSoma.getText());
         entrada.setNome_funcionario((String) cmbPontoFuncionario.getSelectedItem());
     }
 
@@ -125,14 +134,14 @@ public class FrmPonto extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtNome = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        txtFuncao = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtEmp = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         txtCnpj = new javax.swing.JTextField();
         cmbPontoFuncionario = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
+        txtCagaHoraria = new javax.swing.JFormattedTextField();
+        jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -144,6 +153,12 @@ public class FrmPonto extends javax.swing.JFrame {
         jFormatted_txt_almoco = new javax.swing.JFormattedTextField();
         jFormatted_txt_retorno = new javax.swing.JFormattedTextField();
         jFormatted_txt_saida = new javax.swing.JFormattedTextField();
+        txtSoma = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        txtHoraExtra = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        txtHoraNoturna = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabPonto = new javax.swing.JTable();
@@ -161,7 +176,6 @@ public class FrmPonto extends javax.swing.JFrame {
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 255));
-        jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
         jLabel1.setText("Nome:");
@@ -170,58 +184,45 @@ public class FrmPonto extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.ipadx = 31;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(24, 26, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(11, 34, 0, 0);
         jPanel1.add(jLabel1, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.ipadx = 194;
+        gridBagConstraints.ipadx = 164;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 26, 2, 0);
+        gridBagConstraints.insets = new java.awt.Insets(6, 34, 19, 0);
         jPanel1.add(txtNome, gridBagConstraints);
-
-        jLabel2.setText("Função:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(27, 6, 0, 0);
-        jPanel1.add(jLabel2, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.ipadx = 111;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 6, 2, 0);
-        jPanel1.add(txtFuncao, gridBagConstraints);
 
         jLabel3.setText("Empresa:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(27, 5, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(11, 6, 0, 0);
         jPanel1.add(jLabel3, gridBagConstraints);
+
+        txtEmp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEmpActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.ipadx = 194;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 2, 0);
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 19, 0);
         jPanel1.add(txtEmp, gridBagConstraints);
 
         jLabel4.setText("CNPJ:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(27, 6, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(11, 6, 0, 0);
         jPanel1.add(jLabel4, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
@@ -229,7 +230,7 @@ public class FrmPonto extends javax.swing.JFrame {
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.ipadx = 94;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 6, 2, 0);
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 19, 0);
         jPanel1.add(txtCnpj, gridBagConstraints);
 
         cmbPontoFuncionario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -244,7 +245,7 @@ public class FrmPonto extends javax.swing.JFrame {
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.ipadx = 58;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 6, 2, 2);
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 19, 54);
         jPanel1.add(cmbPontoFuncionario, gridBagConstraints);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 3, 14)); // NOI18N
@@ -254,136 +255,198 @@ public class FrmPonto extends javax.swing.JFrame {
         gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridheight = 2;
-        gridBagConstraints.ipadx = 18;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(24, 6, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(11, 19, 0, 0);
         jPanel1.add(jLabel9, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 103;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 19, 0);
+        jPanel1.add(txtCagaHoraria, gridBagConstraints);
+
+        jLabel2.setText("C.horaria:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(11, 6, 0, 0);
+        jPanel1.add(jLabel2, gridBagConstraints);
 
         jPanel3.setBackground(new java.awt.Color(153, 153, 255));
-        jPanel3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel3.setLayout(new java.awt.GridBagLayout());
 
         jLabel5.setText("Entrada:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(8, 39, 0, 0);
+        jPanel3.add(jLabel5, gridBagConstraints);
 
         jLabel6.setText("Almoço:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(8, 6, 0, 0);
+        jPanel3.add(jLabel6, gridBagConstraints);
 
         jLabel7.setText("Retorno:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(8, 7, 0, 0);
+        jPanel3.add(jLabel7, gridBagConstraints);
 
         jLabel8.setText("Saida:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(8, 6, 0, 0);
+        jPanel3.add(jLabel8, gridBagConstraints);
 
         jLabel10.setText("Dia:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(8, 6, 0, 0);
+        jPanel3.add(jLabel10, gridBagConstraints);
 
         txtDia.setToolTipText("dia");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 48;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 0, 0);
+        jPanel3.add(txtDia, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 96;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 39, 0, 0);
+        jPanel3.add(jFormatted_txt_entrada, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 96;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 0, 0);
+        jPanel3.add(jFormatted_txt_almoco, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 96;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 7, 0, 0);
+        jPanel3.add(jFormatted_txt_retorno, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 96;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 0, 0);
+        jPanel3.add(jFormatted_txt_saida, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 10;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 59;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 0, 0);
+        jPanel3.add(txtSoma, gridBagConstraints);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(74, 74, 74)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(14, 14, 14)
-                        .addComponent(jLabel6)
-                        .addGap(72, 72, 72))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jFormatted_txt_entrada, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jFormatted_txt_almoco, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(19, 19, 19)))
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
-                    .addComponent(jFormatted_txt_retorno, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8)
-                    .addComponent(jFormatted_txt_saida, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(39, 39, 39)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtDia, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(13, 13, 13)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel10))
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jFormatted_txt_entrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jFormatted_txt_almoco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jFormatted_txt_saida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jFormatted_txt_retorno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap())
-        );
+        jLabel11.setText("H.Normal");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 10;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(8, 6, 0, 0);
+        jPanel3.add(jLabel11, gridBagConstraints);
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jLabel12.setText("H.Extra");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 12;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(8, 11, 0, 0);
+        jPanel3.add(jLabel12, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 12;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 59;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 11, 0, 0);
+        jPanel3.add(txtHoraExtra, gridBagConstraints);
+
+        jLabel13.setText("H:Noturna");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 14;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(8, 6, 0, 0);
+        jPanel3.add(jLabel13, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 14;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 59;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 0, 0);
+        jPanel3.add(txtHoraNoturna, gridBagConstraints);
 
         tabPonto.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         tabPonto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                { new Integer(1), null, null, null, null, null, null, null},
-                { new Integer(2), null, null, null, null, null, null, null},
-                { new Integer(3), null, null, null, null, null, null, null},
-                { new Integer(4), null, null, null, null, null, null, null},
-                { new Integer(5), null, null, null, null, null, null, null},
-                { new Integer(6), null, null, null, null, null, null, null},
-                { new Integer(7), null, null, null, null, null, null, null},
-                { new Integer(8), null, null, null, null, null, null, null},
-                { new Integer(9), null, null, null, null, null, null, null},
-                { new Integer(10), null, null, null, null, null, null, null},
-                { new Integer(11), null, null, null, null, null, null, null},
-                { new Integer(12), null, null, null, null, null, null, null},
-                { new Integer(13), null, null, null, null, null, null, null},
-                { new Integer(14), null, null, null, null, null, null, null},
-                { new Integer(15), null, null, null, null, null, null, null},
-                { new Integer(16), null, null, null, null, null, null, null},
-                { new Integer(17), null, null, null, null, null, null, null},
-                { new Integer(18), null, null, null, null, null, null, null},
-                { new Integer(19), null, null, null, null, null, null, null},
-                { new Integer(20), null, null, null, null, null, null, null},
-                { new Integer(21), null, null, null, null, null, null, null},
-                { new Integer(22), null, null, null, null, null, null, null},
-                { new Integer(23), null, null, null, null, null, null, null},
-                { new Integer(24), null, null, null, null, null, null, null},
-                { new Integer(25), null, null, null, null, null, null, null},
-                { new Integer(26), null, null, null, null, null, null, null},
-                { new Integer(27), null, null, null, null, null, null, null},
-                { new Integer(28), null, null, null, null, null, null, null},
-                { new Integer(29), null, null, null, null, null, null, null},
-                { new Integer(30), null, null, null, null, null, null, null},
-                { new Integer(31), null, null, null, null, null, null, null}
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
             },
             new String [] {
-                "Dia", "Entrada", "Almoço", "Retorno", "Saida", "Horas normais", "Horas extras", "Horas noturnas"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
-            };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
             }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        ));
         tabPonto.getTableHeader().setReorderingAllowed(false);
         tabPonto.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -416,12 +479,11 @@ public class FrmPonto extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
         btnSalvar.setText("Salvar");
@@ -434,7 +496,7 @@ public class FrmPonto extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(9, 146, 2, 0);
+        gridBagConstraints.insets = new java.awt.Insets(9, 150, 0, 0);
         jPanel2.add(btnSalvar, gridBagConstraints);
 
         btnAlterar.setText("Alterar");
@@ -447,7 +509,7 @@ public class FrmPonto extends javax.swing.JFrame {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(9, 5, 2, 0);
+        gridBagConstraints.insets = new java.awt.Insets(9, 6, 0, 0);
         jPanel2.add(btnAlterar, gridBagConstraints);
 
         btnExcluir.setText("Excluir");
@@ -460,7 +522,7 @@ public class FrmPonto extends javax.swing.JFrame {
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(9, 5, 2, 0);
+        gridBagConstraints.insets = new java.awt.Insets(9, 6, 0, 0);
         jPanel2.add(btnExcluir, gridBagConstraints);
 
         btnGravar.setText("Gravar");
@@ -473,7 +535,7 @@ public class FrmPonto extends javax.swing.JFrame {
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(9, 5, 2, 0);
+        gridBagConstraints.insets = new java.awt.Insets(9, 6, 0, 0);
         jPanel2.add(btnGravar, gridBagConstraints);
 
         btnLimpar.setText("Limpar");
@@ -486,7 +548,7 @@ public class FrmPonto extends javax.swing.JFrame {
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(9, 5, 2, 0);
+        gridBagConstraints.insets = new java.awt.Insets(9, 6, 0, 0);
         jPanel2.add(btnLimpar, gridBagConstraints);
 
         btnSelecionar.setText("SELECIONAR");
@@ -499,7 +561,7 @@ public class FrmPonto extends javax.swing.JFrame {
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(9, 5, 2, 0);
+        gridBagConstraints.insets = new java.awt.Insets(9, 6, 0, 0);
         jPanel2.add(btnSelecionar, gridBagConstraints);
 
         btnFechar.setText("Fechar");
@@ -512,19 +574,17 @@ public class FrmPonto extends javax.swing.JFrame {
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(9, 5, 2, 146);
+        gridBagConstraints.insets = new java.awt.Insets(9, 6, 0, 150);
         jPanel2.add(btnFechar, gridBagConstraints);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 815, Short.MAX_VALUE))
             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -532,9 +592,9 @@ public class FrmPonto extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(0, 0, 0)
                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -550,7 +610,7 @@ public class FrmPonto extends javax.swing.JFrame {
         func.setNomeFuncionario((String) cmbPontoFuncionario.getSelectedItem());
         Funcionario funcionario = DaoPonto.todosFuncionarios(func);
         txtNome.setText(funcionario.getNomeFuncionario());
-        txtFuncao.setText(funcionario.getFuncao());
+        txtCagaHoraria.setText(String.valueOf(funcionario.getCargaHoraria()));
         txtEmp.setText(funcionario.getNomeEmpresa());
         txtCnpj.setText(funcionario.getCnpj());
     }//GEN-LAST:event_cmbPontoFuncionarioMouseClicked
@@ -559,6 +619,9 @@ public class FrmPonto extends javax.swing.JFrame {
         if (txtDia.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Informe o dia!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
         } else {
+            String srt = somarIntervaloDia();
+            txtSoma.setText(String.valueOf(srt));
+            JOptionPane.showMessageDialog(this, "soma=" + srt);
             carregarCampos();
             DaoPonto.inserirHorarios(entrada);
             carregarTabela();
@@ -566,9 +629,26 @@ public class FrmPonto extends javax.swing.JFrame {
             config.limparCampos(listaParaLimpar);
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
+    private String somarIntervaloDia() {
+        String h_entrada = jFormatted_txt_entrada.getText();
+        String h_almoco = jFormatted_txt_almoco.getText();
+        String h_retorno = jFormatted_txt_retorno.getText();
+        String h_saida = jFormatted_txt_saida.getText();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        LocalTime time_entrada = LocalTime.parse(h_entrada, formatter);
+        LocalTime time_almoco = LocalTime.parse(h_almoco, formatter);
+        LocalTime time_retorno = LocalTime.parse(h_retorno, formatter);
+        LocalTime time_saida = LocalTime.parse(h_saida, formatter);
+        String respostaManha = somarHoras.calcularIntervaloManha(time_entrada, time_almoco);
+        String respostaTarde = somarHoras.calcularIntervaloManha(time_retorno, time_saida);
+        String resposta = somarHoras.calcularIntervaloDia(respostaManha, respostaTarde);
+        return resposta;
+    }
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        if (txtNome.getText().isEmpty()) {
+        if (jFormatted_txt_entrada.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Preencha os campos!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
         } else {
             carregarCampos();
@@ -608,8 +688,8 @@ public class FrmPonto extends javax.swing.JFrame {
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
         List<EntradaDeHorarios> dadosLimpos = DaoPonto.limparLista();
-        String[] colunas = new String[]{"Dia", "Entrada", "Almoço", "Retorno", "Saida"};
-        int[] larguraColunas = {50, 150, 150, 150, 150};//p enviar a largura das colunas da tabela
+        String[] colunas = new String[]{"Dia", "Entrada", "Almoço", "Retorno", "Saida", "Hrs total"};
+        int[] larguraColunas = {50, 100, 100, 100, 100, 100};//p enviar a largura das colunas da tabela
         DesenharTabela<EntradaDeHorarios> desenhar = new DesenharTabela<>();
         desenhar.renderizarTabela(tabPonto, colunas, larguraColunas, dadosLimpos);
     }//GEN-LAST:event_btnLimparActionPerformed
@@ -645,6 +725,10 @@ public class FrmPonto extends javax.swing.JFrame {
             System.out.println("Acesso negado!");
         }
     }//GEN-LAST:event_btnSelecionarActionPerformed
+
+    private void txtEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmpActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmpActionPerformed
 
     private String nomeArquivo() {
         String nome = "";
@@ -712,6 +796,9 @@ public class FrmPonto extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField jFormatted_txt_saida;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -727,10 +814,13 @@ public class FrmPonto extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JFileChooser seletorDeArquivos;
     private javax.swing.JTable tabPonto;
+    private javax.swing.JFormattedTextField txtCagaHoraria;
     private javax.swing.JTextField txtCnpj;
     private javax.swing.JTextField txtDia;
     private javax.swing.JTextField txtEmp;
-    private javax.swing.JTextField txtFuncao;
+    private javax.swing.JTextField txtHoraExtra;
+    private javax.swing.JTextField txtHoraNoturna;
     private javax.swing.JTextField txtNome;
+    private javax.swing.JTextField txtSoma;
     // End of variables declaration//GEN-END:variables
 }

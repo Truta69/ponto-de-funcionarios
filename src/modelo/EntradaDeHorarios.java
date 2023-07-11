@@ -1,6 +1,5 @@
 package modelo;
 
-import java.sql.Time;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,16 +15,19 @@ public class EntradaDeHorarios {
     int dia;
     @Getter
     @Setter
-    Time hora_entrada;
+    String hora_entrada;
     @Getter
     @Setter
-    Time hora_almoco;
+    String hora_almoco;
     @Getter
     @Setter
-    Time hora_retorno;
+    String hora_retorno;
     @Getter
     @Setter
-    Time hora_saida;
+    String hora_saida;
+    @Getter
+    @Setter
+    String hora_total;
     @Getter
     @Setter
     int id_funcionario;

@@ -157,11 +157,13 @@ public class FrmMenu extends javax.swing.JFrame {
 
     private void btnEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmpresaActionPerformed
         FrmEmpresa emp = new FrmEmpresa();
+        emp.setLocationRelativeTo(null);
         emp.setVisible(true);
     }//GEN-LAST:event_btnEmpresaActionPerformed
 
     private void btnFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFuncionarioActionPerformed
         FrmFuncionario func = new FrmFuncionario();
+        func.setLocationRelativeTo(null);//gera centralizado
         func.setVisible(true);
     }//GEN-LAST:event_btnFuncionarioActionPerformed
 

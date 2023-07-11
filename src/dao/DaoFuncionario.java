@@ -26,12 +26,12 @@ public class DaoFuncionario {
                 Funcionario f = new Funcionario();
                 f.setCodigoFuncionario(rs.getInt("id_funcionario"));
                 f.setNomeFuncionario(rs.getString("nome_funcionario"));
-                f.setFuncao(rs.getString("funcao"));
+                f.setCargaHoraria(rs.getString("carga_horaria"));
                 f.setCod_empresa(rs.getInt("id_empresa"));
                 lista.add(f);
             }
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao varregar funcionario!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Erro ao carregar funcionario!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
         return lista;
     }
@@ -42,7 +42,7 @@ public class DaoFuncionario {
     public static List<String> todasEmpresas() {
         List<String> todas = new ArrayList<>();
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
-            String sql = "select * from tab_empresa";
+            String sql = "select * from tab_empresa order by nome_empresa";
             PreparedStatement stm = c.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();//recebe resultado
             Empresa emp = new Empresa();
@@ -76,10 +76,10 @@ public class DaoFuncionario {
     public static void inserirFuncionario(Funcionario f) {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             int codRecebido = recuperaCodEmpresa(f);//declarada como static
-            String sql = "insert into tab_funcionario(nome_funcionario,funcao,id_empresa)values(?,?,?) ";
+            String sql = "insert into tab_funcionario(nome_funcionario,carga_horaria,id_empresa)values(?,?,?) ";
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setString(1, f.getNomeFuncionario());
-            pst.setString(2, f.getFuncao());
+            pst.setString(2, f.getCargaHoraria());
             pst.setInt(3, codRecebido);
             pst.executeUpdate();
         } catch (SQLException ex) {
@@ -90,10 +90,10 @@ public class DaoFuncionario {
     public static void upDateFuncionario(Funcionario func) {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             int codRecebido = recuperaCodEmpresa(func);
-            String sql = "update  tab_funcionario set nome_funcionario =? ,funcao=?,id_empresa=? where id_funcionario=? ";
+            String sql = "update  tab_funcionario set nome_funcionario =? ,carga_horaria=?,id_empresa=? where id_funcionario=? ";
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setString(1, func.getNomeFuncionario());
-            pst.setString(2, func.getFuncao());
+            pst.setString(2, func.getCargaHoraria());
             //pst.setInt(3, codRecebido);
             pst.setInt(3, func.getCod_empresa());
             pst.setInt(4, func.getCodigoFuncionario());
@@ -114,7 +114,7 @@ public class DaoFuncionario {
             //Funcionario f = new Funcionario();
             f.setCodigoFuncionario(rs.getInt("id_funcionario"));
             f.setNomeFuncionario(rs.getString("nome_funcionario"));
-            f.setFuncao(rs.getString("funcao"));
+            f.setCargaHoraria(rs.getString("carga_horaria"));
             f.setCod_empresa(rs.getInt("id_empresa"));
             //return f;
         } catch (SQLException ex) {
@@ -137,13 +137,13 @@ public class DaoFuncionario {
     public static List<Funcionario> dadosFuncionarios(String nomeRecebido) throws SQLException {
         List<Funcionario> lista = new ArrayList<>();
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
-            String sql = "select nome_funcionario, funcao, nome_empresa,cnpj from tab_funcionario as func join tab_empresa as emp on func.id_empresa=emp.id_empresa where nome_funcionario='" + nomeRecebido + "'";
+            String sql = "select nome_funcionario, carga_horaria, nome_empresa,cnpj from tab_funcionario as func join tab_empresa as emp on func.id_empresa=emp.id_empresa where nome_funcionario='" + nomeRecebido + "'";
             PreparedStatement pst = c.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
             rs.next();
             Funcionario f = new Funcionario();
             f.setNomeFuncionario(rs.getString("nome_funcionario"));
-            f.setFuncao(rs.getString("funcao"));
+            f.setCargaHoraria(rs.getString("carga_horaria"));
             f.setNomeEmpresa(rs.getString("nome_empresa"));
             f.setCnpj(rs.getString("cnpj"));
             lista.add(f);

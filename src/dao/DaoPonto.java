@@ -12,9 +12,9 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 public class DaoPonto {
-
+    
     static int codFuncionarios;
-
+    
     public static List<EntradaDeHorarios> todosHorarios() {
         List<EntradaDeHorarios> lista = new ArrayList<>();
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
@@ -24,10 +24,11 @@ public class DaoPonto {
             while (rs.next()) {
                 EntradaDeHorarios eh = new EntradaDeHorarios();
                 eh.setDia(rs.getInt("dia"));
-                eh.setHora_entrada(rs.getTime("hora_entrada"));
-                eh.setHora_almoco(rs.getTime("hora_almoco"));
-                eh.setHora_retorno(rs.getTime("hora_retorno"));
-                eh.setHora_saida(rs.getTime("hora_saida"));
+                eh.setHora_entrada(rs.getString("hora_entrada"));
+                eh.setHora_almoco(rs.getString("hora_almoco"));
+                eh.setHora_retorno(rs.getString("hora_retorno"));
+                eh.setHora_saida(rs.getString("hora_saida"));
+                eh.setHora_total(rs.getString("total_horas"));
                 lista.add(eh);
             }
         } catch (SQLException ex) {
@@ -44,7 +45,7 @@ public class DaoPonto {
             ResultSet rs = stm.executeQuery();//recebe resultado
             while (rs.next()) {
                 f.setNomeFuncionario(rs.getString("nome_funcionario"));
-                f.setFuncao(rs.getString("funcao"));
+                f.setCargaHoraria(rs.getString("carga_horaria"));
                 f.setNomeEmpresa(rs.getString("nome_empresa"));
                 f.setCnpj(rs.getString("cnpj"));
             }
@@ -57,7 +58,7 @@ public class DaoPonto {
     //carrega combo tela ponto
     public static ResultSet carregar() {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
-            String sql = "select nome_funcionario from tab_funcionario";
+            String sql = "select nome_funcionario from tab_funcionario order by nome_funcionario";
             PreparedStatement stm = c.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();//recebe resultado
             return rs;
@@ -79,7 +80,7 @@ public class DaoPonto {
         }
         return codFuncionarios;
     }
-
+    
     private static int recuperaCodFuncionario(EntradaDeHorarios eh) {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             String sql = "select id_funcionario from tab_funcionario where nome_funcionario= '" + eh.getNome_funcionario() + "'";
@@ -98,30 +99,31 @@ public class DaoPonto {
     public static void inserirHorarios(EntradaDeHorarios entrada) {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             int codRecebido = recuperaCodigoFuncionario(entrada);
-            String sql = "insert into tab_ponto (dia,hora_entrada,hora_almoco,hora_retorno,hora_saida,id_funcionario)values(?,?,?,?,?,?)";
+            String sql = "insert into tab_ponto (dia,hora_entrada,hora_almoco,hora_retorno,hora_saida,id_funcionario,total_horas)values(?,?,?,?,?,?,?)";
             //String sql = "update tab_ponto set  hora_entrada=?,hora_almoco=?,hora_retorno=?,hora_saida=?,id_funcionario where dia=?";
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setInt(1, entrada.getDia());
-            pst.setTime(2, entrada.getHora_entrada());
-            pst.setTime(3, entrada.getHora_almoco());
-            pst.setTime(4, entrada.getHora_retorno());
-            pst.setTime(5, entrada.getHora_saida());
+            pst.setString(2, entrada.getHora_entrada());
+            pst.setString(3, entrada.getHora_almoco());
+            pst.setString(4, entrada.getHora_retorno());
+            pst.setString(5, entrada.getHora_saida());
             pst.setInt(6, codRecebido);
+            pst.setString(7, entrada.getHora_total());
             pst.executeUpdate();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao inserir horarios!\n" + ex, "Alerta", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    
     public static void upDatePonto(EntradaDeHorarios entra) {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             int codRecebido = recuperaCodFuncionario(entra);
             String sql = "update  tab_ponto set hora_entrada =?, hora_almoco=?, hora_retorno=?, hora_saida=?, id_funcionario=?, dia = ? where id_ponto=? ";
             PreparedStatement pst = c.prepareStatement(sql);
-            pst.setTime(1, entra.getHora_entrada());
-            pst.setTime(2, entra.getHora_almoco());
-            pst.setTime(3, entra.getHora_retorno());
-            pst.setTime(4, entra.getHora_saida());
+            pst.setString(1, entra.getHora_entrada());
+            pst.setString(2, entra.getHora_almoco());
+            pst.setString(3, entra.getHora_retorno());
+            pst.setString(4, entra.getHora_saida());
             pst.setInt(5, entra.getId_funcionario());
             pst.setInt(6, entra.getDia());
             pst.setInt(7, entra.getId_entrada());
@@ -140,10 +142,10 @@ public class DaoPonto {
             ResultSet rs = pst.executeQuery();
             rs.next();
             ent.setId_entrada(rs.getInt("id_ponto"));
-            ent.setHora_entrada(rs.getTime("hora_entrada"));
-            ent.setHora_almoco(rs.getTime("hora_almoco"));
-            ent.setHora_retorno(rs.getTime("hora_retorno"));
-            ent.setHora_saida(rs.getTime("hora_saida"));
+            ent.setHora_entrada(rs.getString("hora_entrada"));
+            ent.setHora_almoco(rs.getString("hora_almoco"));
+            ent.setHora_retorno(rs.getString("hora_retorno"));
+            ent.setHora_saida(rs.getString("hora_saida"));
             ent.setId_funcionario(rs.getInt("id_funcionario"));
             ent.setDia(rs.getInt("dia"));
         } catch (SQLException ex) {
@@ -151,7 +153,7 @@ public class DaoPonto {
         }
         return ent;
     }
-
+    
     public static void deletarHorarios(EntradaDeHorarios ent) {
         try (Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd_ponto", "postgres", "1234")) {
             String sql = "delete from tab_ponto where id_ponto=?";
